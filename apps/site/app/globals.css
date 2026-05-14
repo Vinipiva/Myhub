@@ -1,0 +1,44 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Red Hat Text", sans-serif;
+  --font-heading: "Red Hat Display", sans-serif;
+  --font-decorative: "Dynalight", cursive;
+}
+
+body {
+  font-family: var(--font-sans);
+  background: var(--background);
+  color: var(--foreground);
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-heading);
+}
+
+.decorative-text {
+  font-family: var(--font-decorative);
+}
+
+:root {
+  --background: hsl(0, 0%, 98%);
+  --foreground: hsl(0, 0%, 10%);
+}
+
+.clip-house {
+  clip-path: polygon(50% 0%, 100% 10%, 100% 100%, 0% 100%, 0% 10%);
+}
+
+.clip-inverted {
+  clip-path: polygon(0% 10%, 50% 0%, 100% 10%, 100% 90%, 50% 100%, 0% 90%);
+}
+
+@media (min-width: 640px) {
+  .clip-house { clip-path: polygon(50% 5%, 100% 15%, 100% 100%, 0% 100%, 0% 15%); }
+  .clip-inverted { clip-path: polygon(0% 15%, 50% 5%, 100% 15%, 100% 85%, 50% 95%, 0% 85%); }
+}
+
+@media (max-width: calc(64rem - 1px)) {
+  .clip-house { clip-path: polygon(50% 0%, 100% 3%, 100% 100%, 0% 100%, 0% 3%); }
+  .clip-inverted { clip-path: polygon(0% 2.5%, 50% 4%, 100% 2.5%, 100% 97.5%, 50% 100%, 0% 97.5%); }
+}

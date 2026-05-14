@@ -1,0 +1,10 @@
+{
+  "name": "vinicius-hub",
+  "private": true,
+  "scripts": {
+    "dev": "pnpm --filter site dev",
+    "build": "pnpm --filter site build",
+    "lint": "pnpm --filter site lint"
+  },
+  "packageManager": "pnpm@9.0.0"
+}

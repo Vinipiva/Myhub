@@ -1,0 +1,116 @@
+{
+  "companies": [
+    {
+      "id": "pepsico",
+      "name": "PepsiCo",
+      "role": "Senior Product Designer",
+      "period": "Nov 2025 – Mar 2026",
+      "location": "Purchase, NY",
+      "type": "Outsourced remote contractor",
+      "summary": "Supported cross-functional teams by structuring KPI visualization patterns and improving usability within enterprise Power BI dashboards.",
+      "bullets": [
+        "Led UX structuring for KPI and data visualization across global teams.",
+        "Improved clarity and usability of enterprise dashboards by standardizing layout patterns, interaction logic, and data storytelling principles.",
+        "Collaborated with cross-functional stakeholders (product, data engineering, global ops) to align reporting frameworks and reduce interpretation friction.",
+        "Contributed to foundational guardrails for scalable analytics experiences across internal enterprise tools."
+      ],
+      "tags": ["enterprise", "data", "b2b", "dashboard", "power-bi"]
+    },
+    {
+      "id": "realtor",
+      "name": "Realtor.com",
+      "role": "Senior Product Designer",
+      "period": "Oct 2023 – May 2025",
+      "location": "Austin, TX",
+      "type": "Remote contractor",
+      "summary": "Played a pivotal role in shaping the user experience across many teams to address the needs of buyers, renters, real estate agents, and coordinators.",
+      "bullets": [
+        "Designed rental search experience improvements and contributed to an AI-powered conversational MVP.",
+        "Conducted research, including heuristic reviews and user interviews, to provide foundations for improving the company's online store.",
+        "Worked on Upnest CRM to streamline workflows with contextual actions and improved lead segmentation, boosting task completion speed and elevating agent satisfaction and NPS across the funnel."
+      ],
+      "tags": ["proptech", "consumer", "ai", "growth", "research", "crm"]
+    },
+    {
+      "id": "fanfest",
+      "name": "Fanfest.io",
+      "role": "Founding Designer & Strategic Partner",
+      "period": "Dec 2021 – Dec 2025",
+      "location": "New York, NY",
+      "type": "Part-time contractor",
+      "summary": "As the founding designer and ongoing design consultant, established the core design system and UX/UI direction for FanFest.io, and continue to advise the CEO on strategic design decisions.",
+      "bullets": [
+        "Established core design system and UX/UI strategy — product used by PSG, ManCity, 49ers, NBA, Serie A, Socios, and Sky Sports.",
+        "Scaled MVP to millions of fans — drove $3M+ in revenue, secured $5M+ in funding, and co-crafted investor decks with the CEO.",
+        "Drove up to 30% paid conversion in early pilots via gamification, AI personalization, and real-time fan experiences."
+      ],
+      "tags": ["startup", "consumer", "ai", "gamification", "design-system", "entertainment"]
+    },
+    {
+      "id": "avail",
+      "name": "Avail.co",
+      "role": "Lead Product Designer",
+      "period": "Mar 2021 – Apr 2023",
+      "location": "Chicago, IL",
+      "type": "Remote contractor",
+      "summary": "As Lead Designer for the Marketing Squad, owned all customer-facing marketing and conversion pages, researching and crafting user journeys and interfaces.",
+      "bullets": [
+        "Accelerated page update workflow by 84% through a modular component library, boosting conversion by 27%.",
+        "Developed a renter-to-home-buyer conversion flow, generating 1,000+ high-quality leads per month.",
+        "Revamped onboarding and leasing/payment workflows, reducing churn and enhancing the experience for 700K+ customers."
+      ],
+      "tags": ["proptech", "growth", "conversion", "design-system", "consumer"]
+    },
+    {
+      "id": "oi",
+      "name": "Oi - Brazilian Telecom",
+      "role": "Senior Product Designer UX/UI",
+      "period": "Nov 2018 – Mar 2021",
+      "location": "Rio de Janeiro, Brazil",
+      "type": "Full-time employee",
+      "summary": "Led the foundation of Oi's e-commerce platform and enterprise design system, driving digital transformation for over 48 million customers.",
+      "bullets": [
+        "Launched Oi's first digital sales platform and established a scalable design system, contributing 17% of total company revenue six months after release.",
+        "Implemented a standardized QA workflow, tripling deployment speed and significantly improving product release reliability.",
+        "Automated 5M+ monthly support tickets with an NLP chatbot — delivering $6M in annual cost savings in partnership with IBM and Meta."
+      ],
+      "tags": ["enterprise", "ecommerce", "ai", "design-system", "b2c", "telecom"]
+    },
+    {
+      "id": "corollarium",
+      "name": "Corollarium Technologies",
+      "role": "UX/UI Designer",
+      "period": "2014 – 2018",
+      "location": "São Paulo, Brazil",
+      "type": "Full-time employee",
+      "summary": "Web-first designer building responsive, modular interfaces, VR/AR simulators, interactive motion-based experiences, and custom CMS platforms.",
+      "bullets": [
+        "Built VR/AR simulators for training, education, and data visualization.",
+        "Created interactive experiences including a 360° camera used by Method at Coachella 2018.",
+        "Built WebXR immersive educational tools for public institutions.",
+        "Custom CMS platform featured at Museum Connections 2016 (Paris)."
+      ],
+      "tags": ["ar-vr", "interactive", "web", "startup"]
+    }
+  ],
+  "education": [
+    {
+      "degree": "Postgraduate Studies in Communication: Contemporary Culture & New Media Studies",
+      "school": "NOVA University Lisbon",
+      "location": "Lisbon, Portugal",
+      "period": "2015–2016"
+    },
+    {
+      "degree": "Undergraduate Exchange – Design & Visual Communications",
+      "school": "University of Lisbon",
+      "location": "Lisbon, Portugal",
+      "period": "2011–2012"
+    },
+    {
+      "degree": "Bachelor's in Communication, Marketing & Advertising",
+      "school": "UNIP",
+      "location": "São Paulo, Brazil",
+      "period": "2009–2013"
+    }
+  ]
+}
