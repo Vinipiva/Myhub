@@ -1,0 +1,47 @@
+---
+import Layout from "../layouts/Layout.astro";
+import Header from "../components/Header";
+import Hero from "../components/Hero";
+import CasePepsiCo from "../components/CasePepsiCo.astro";
+import CaseRealtor from "../components/CaseRealtor.astro";
+import CaseAvail from "../components/CaseAvail.astro";
+import CaseFanfest from "../components/CaseFanfest.astro";
+import AboutMe from "../components/AboutMe.astro";
+import Other from "../components/Other.astro";
+import Contact from "../components/Contact";
+import Footer from "../components/Footer.astro";
+import { profileData } from "../lib/data";
+---
+
+<Layout
+  title={`${profileData.name} — ${profileData.role}`}
+  description={profileData.summary}
+>
+  <Header client:load />
+
+  <main>
+    <Hero client:load name={profileData.name} role={profileData.role} summary={profileData.summary} />
+
+    <div class="text-left px-4 sm:px-8 md:px-12 py-8 sm:py-12 z-20 max-w-7xl mb-8 mx-auto">
+      <p class="text-2xl sm:text-3xl font-bold text-gray-700 max-w-4xl leading-relaxed border-l-4 border-gray-500 pl-4">
+        {profileData.impactStatement}
+      </p>
+    </div>
+
+    <div id="work">
+      <h2 class="text-5xl md:text-6xl my-15 text-center md:my-24 text-gray-500 decorative-text">
+        Recent works
+      </h2>
+      <CasePepsiCo />
+      <CaseRealtor />
+      <CaseAvail />
+      <CaseFanfest />
+    </div>
+
+    <AboutMe />
+    <Other />
+    <Contact client:load />
+  </main>
+
+  <Footer />
+</Layout>

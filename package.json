@@ -3,8 +3,11 @@
   "private": true,
   "scripts": {
     "dev": "pnpm --filter site dev",
+    "dev:hub": "pnpm --filter hub dev",
+    "dev:all": "pnpm --parallel --filter './apps/*' dev",
     "build": "pnpm --filter site build",
-    "lint": "pnpm --filter site lint"
+    "build:hub": "pnpm --filter hub build",
+    "preview": "pnpm --filter site preview"
   },
   "packageManager": "pnpm@9.0.0"
 }

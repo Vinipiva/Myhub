@@ -1,27 +1,24 @@
 {
-  "name": "site",
+  "name": "hub",
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "astro dev",
+    "dev": "astro dev --port 4322",
     "build": "astro build",
-    "preview": "astro preview"
+    "preview": "astro preview --port 4322"
   },
   "dependencies": {
+    "@astrojs/node": "^9.5.5",
     "@astrojs/react": "^4.2.0",
-    "@react-three/drei": "^10.7.7",
-    "@react-three/fiber": "^9.6.1",
+    "@keystatic/astro": "^5.0.0",
+    "@keystatic/core": "^0.5.44",
     "astro": "^5.7.0",
-    "random-words": "^2.0.1",
     "react": "^19.0.0",
-    "react-dom": "^19.0.0",
-    "three": "^0.184.0"
+    "react-dom": "^19.0.0"
   },
   "devDependencies": {
-    "@tailwindcss/vite": "^4.0.0",
     "@types/react": "^19",
     "@types/react-dom": "^19",
-    "tailwindcss": "^4.0.0",
     "typescript": "^5.7.0"
   }
 }
