@@ -3,10 +3,12 @@
   "private": true,
   "scripts": {
     "dev": "pnpm --filter site dev",
-    "dev:hub": "pnpm --filter hub dev",
+    "dev:hub": "apps/hub/node_modules/.bin/astro dev --root apps/hub --port 4322",
     "dev:all": "pnpm --parallel --filter './apps/*' dev",
+    "dev:portfolio": "pnpm --filter portfolio dev",
     "build": "pnpm --filter site build",
-    "build:hub": "pnpm --filter hub build",
+    "build:hub": "apps/hub/node_modules/.bin/astro build --root apps/hub",
+    "build:portfolio": "pnpm --filter portfolio build",
     "preview": "pnpm --filter site preview"
   },
   "packageManager": "pnpm@9.0.0"

@@ -1,0 +1,28 @@
+---
+import DeckLayout from "../../layouts/DeckLayout.astro";
+import CaseDetail from "../../components/CaseDetail";
+import { getDeckConfig, getDeckProjects, getProjectById } from "../../lib/data";
+
+export function getStaticPaths() {
+  const projects = getDeckProjects();
+  return projects.map((p) => ({ params: { slug: p.id } }));
+}
+
+const { slug } = Astro.params;
+const project = getProjectById(slug);
+const config = getDeckConfig();
+
+if (!project) {
+  return Astro.redirect("/cases");
+}
+---
+
+<DeckLayout>
+  <CaseDetail
+    client:only="react"
+    project={project}
+    accent={config.theme.accent}
+    foreground={config.theme.foreground}
+    background={config.theme.background}
+  />
+</DeckLayout>

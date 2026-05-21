@@ -1,0 +1,82 @@
+{
+  "$ref": "#/definitions/cases",
+  "definitions": {
+    "cases": {
+      "type": "object",
+      "properties": {
+        "title": {
+          "type": "string"
+        },
+        "company": {
+          "type": "string"
+        },
+        "role": {
+          "type": "string"
+        },
+        "period": {
+          "type": "string"
+        },
+        "order": {
+          "type": "number"
+        },
+        "problem": {
+          "type": "string"
+        },
+        "approach": {
+          "type": "string"
+        },
+        "tradeoffs": {
+          "type": "string"
+        },
+        "outcome": {
+          "type": "string"
+        },
+        "retrospective": {
+          "type": "string"
+        },
+        "metrics": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "value": {
+                "type": "string"
+              },
+              "label": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "value",
+              "label"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "tags": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "$schema": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "title",
+        "company",
+        "role",
+        "period",
+        "order",
+        "problem",
+        "approach",
+        "tradeoffs",
+        "outcome",
+        "tags"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "$schema": "http://json-schema.org/draft-07/schema#"
+}

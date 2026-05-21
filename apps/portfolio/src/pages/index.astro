@@ -1,0 +1,134 @@
+---
+import DeckLayout from "../layouts/DeckLayout.astro";
+import { getDeckConfig } from "../lib/data";
+
+const config = getDeckConfig();
+const { cover, theme } = config;
+---
+
+<DeckLayout>
+  <div class="cover">
+    <div class="cover__content">
+      <p class="cover__label">Interactive Portfolio</p>
+      <h1 class="cover__headline">{cover.headline}</h1>
+      <p class="cover__subheadline">{cover.subheadline}</p>
+      <p class="cover__tagline">{cover.tagline}</p>
+      {cover.availableFor && (
+        <p class="cover__available">{cover.availableFor}</p>
+      )}
+    </div>
+    <nav class="cover__nav">
+      <a href="/cases" class="cover__cta">
+        View Cases
+        <span class="cover__cta-arrow">→</span>
+      </a>
+    </nav>
+    <footer class="cover__footer">
+      <span>2026</span>
+      <span>·</span>
+      <span>viniciuspiva.com</span>
+    </footer>
+  </div>
+</DeckLayout>
+
+<style define:vars={{ accent: config.theme.accent, fg: config.theme.foreground }}>
+  .cover {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 120px;
+    position: relative;
+  }
+
+  .cover__content {
+    max-width: 1100px;
+  }
+
+  .cover__label {
+    font-size: 18px;
+    font-family: monospace;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 40px;
+    opacity: 0.8;
+  }
+
+  .cover__headline {
+    font-size: 120px;
+    font-weight: 700;
+    line-height: 1;
+    letter-spacing: -0.03em;
+    color: var(--fg);
+    margin-bottom: 32px;
+  }
+
+  .cover__subheadline {
+    font-size: 32px;
+    font-weight: 400;
+    color: var(--fg);
+    opacity: 0.7;
+    margin-bottom: 24px;
+  }
+
+  .cover__tagline {
+    font-size: 24px;
+    color: var(--fg);
+    opacity: 0.45;
+    max-width: 720px;
+    line-height: 1.5;
+    margin-bottom: 48px;
+  }
+
+  .cover__available {
+    font-size: 16px;
+    font-family: monospace;
+    color: var(--accent);
+    opacity: 0.6;
+    letter-spacing: 0.05em;
+  }
+
+  .cover__nav {
+    position: absolute;
+    bottom: 120px;
+    right: 120px;
+  }
+
+  .cover__cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 16px;
+    font-size: 22px;
+    font-weight: 500;
+    color: var(--fg);
+    text-decoration: none;
+    border: 1px solid rgba(255,255,255,0.15);
+    padding: 20px 40px;
+    border-radius: 4px;
+    transition: border-color 0.2s, background 0.2s;
+  }
+
+  .cover__cta:hover {
+    border-color: var(--accent);
+    background: rgba(99,102,241,0.08);
+  }
+
+  .cover__cta-arrow {
+    font-size: 26px;
+    color: var(--accent);
+  }
+
+  .cover__footer {
+    position: absolute;
+    bottom: 48px;
+    left: 120px;
+    display: flex;
+    gap: 16px;
+    font-size: 16px;
+    color: var(--fg);
+    opacity: 0.25;
+    font-family: monospace;
+  }
+</style>

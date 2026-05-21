@@ -57,4 +57,29 @@ const projects = defineCollection({
   }),
 });
 
-export const collections = { profile, experience, projects };
+const cases = defineCollection({
+  type: "content",
+  schema: z.object({
+    title: z.string(),
+    company: z.string(),
+    role: z.string(),
+    period: z.string(),
+    order: z.number(),
+    problem: z.string(),
+    approach: z.string(),
+    tradeoffs: z.string(),
+    outcome: z.string(),
+    retrospective: z.string().optional(),
+    metrics: z
+      .array(
+        z.object({
+          value: z.string(),
+          label: z.string(),
+        })
+      )
+      .optional(),
+    tags: z.array(z.string()),
+  }),
+});
+
+export const collections = { profile, experience, projects, cases };

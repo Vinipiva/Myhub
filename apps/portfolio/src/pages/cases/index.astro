@@ -1,0 +1,17 @@
+---
+import DeckLayout from "../../layouts/DeckLayout.astro";
+import CaseNavigator from "../../components/CaseNavigator";
+import { getDeckConfig, getDeckProjects } from "../../lib/data";
+
+const config = getDeckConfig();
+const projects = getDeckProjects();
+---
+
+<DeckLayout>
+  <CaseNavigator
+    client:only="react"
+    projects={projects}
+    accent={config.theme.accent}
+    foreground={config.theme.foreground}
+  />
+</DeckLayout>
