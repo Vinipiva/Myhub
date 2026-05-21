@@ -46,6 +46,7 @@ const cases = await Promise.all(
 );
 
 const availableProjects = cases.length > 0 ? cases : projects;
+const portfolioUrl = import.meta.env.PUBLIC_PORTFOLIO_URL ?? "http://localhost:4323";
 
 let presentations: any[] = [];
 try {
@@ -91,6 +92,7 @@ try {
       client:load
       initialPresentations={presentations}
       availableProjects={availableProjects}
+      portfolioUrl={portfolioUrl}
     />
   </body>
 </html>

@@ -1,5 +1,8 @@
 ---
 import { fanfestData as data } from "../lib/data";
+
+type Section = { title: string; text: string };
+type Metric = { value: string; label: string };
 ---
 
 <div class="bg-gradient-to-b from-[#2566b3] to-[#f8f8f8] -translate-y-[1px] transform-gpu">
@@ -45,7 +48,7 @@ import { fanfestData as data } from "../lib/data";
               </div>
             </div>
           </div>
-          {data.sections.map((section) => (
+          {data.sections.map((section: Section) => (
             <div>
               <p class="text-lg font-bold text-purple-300">{section.title}:</p>
               <p class="text-lg text-gray-200 leading-relaxed">{section.text}</p>
@@ -69,7 +72,7 @@ import { fanfestData as data } from "../lib/data";
 
       <!-- Metrics -->
       <div class="flex flex-col sm:flex-row justify-between mt-4 sm:mt-6 gap-4 sm:gap-6 text-center transform-gpu">
-        {data.metrics.map((m) => (
+        {data.metrics.map((m: Metric) => (
           <div class="bg-black/20 backdrop-blur-lg p-8 rounded-2xl shadow-lg flex-1">
             <div class="text-5xl font-extrabold bg-gradient-to-b from-purple-400 to-purple-600 text-transparent bg-clip-text">{m.value}</div>
             <p class="text-lg text-white font-bold mt-2">{m.label}</p>
@@ -80,7 +83,7 @@ import { fanfestData as data } from "../lib/data";
       <!-- Logos -->
       <div class="mt-8 sm:mt-12 transform-gpu">
         <div class="flex flex-wrap justify-center items-center gap-2 sm:gap-4">
-          {data.logos.map((logo) => (
+          {data.logos.map((logo: string) => (
             <div class="h-8 sm:h-16 w-auto">
               <img
                 src={`/images/cases/fanfest-logos/${logo}`}

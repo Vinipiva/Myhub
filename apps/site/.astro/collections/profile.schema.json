@@ -52,6 +52,12 @@
         "availability": {
           "type": "string"
         },
+        "about": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
         "$schema": {
           "type": "string"
         }

@@ -32,6 +32,18 @@
               },
               "label": {
                 "type": "string"
+              },
+              "color": {
+                "type": "string"
+              },
+              "colorFrom": {
+                "type": "string"
+              },
+              "colorTo": {
+                "type": "string"
+              },
+              "suffix": {
+                "type": "string"
               }
             },
             "required": [
@@ -45,6 +57,121 @@
           "type": "array",
           "items": {
             "type": "string"
+          }
+        },
+        "teams": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string"
+              },
+              "description": {
+                "type": "string"
+              },
+              "bullets": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "label": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "text": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "label",
+                    "text"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            },
+            "required": [
+              "name",
+              "description",
+              "bullets"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "paragraphs": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "sections": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "title": {
+                "type": "string"
+              },
+              "text": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "title",
+              "text"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "logos": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "screens": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "src": {
+                "type": "string"
+              },
+              "alt": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "src",
+              "alt"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "kpiCards": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "label": {
+                "type": "string"
+              },
+              "value": {
+                "type": "string"
+              },
+              "trend": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "label",
+              "value",
+              "trend"
+            ],
+            "additionalProperties": false
           }
         },
         "$schema": {

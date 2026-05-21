@@ -1,13 +1,23 @@
-import profileJson from "@data/profile.json";
-import experienceJson from "@data/experience.json";
-import pepsicoJson from "@data/projects/pepsico.json";
-import realtorJson from "@data/projects/realtor.json";
-import availJson from "@data/projects/avail.json";
-import fanfestJson from "@data/projects/fanfest.json";
+const profileGlob = import.meta.glob<{ frontmatter: Record<string, unknown> }>(
+  "../content/profile/*.md",
+  { eager: true }
+);
 
-export const profileData = profileJson;
-export const experienceData = experienceJson;
-export const pepsicoData = pepsicoJson;
-export const realtorData = realtorJson;
-export const availData = availJson;
-export const fanfestData = fanfestJson;
+const projectGlob = import.meta.glob<{ frontmatter: Record<string, unknown> }>(
+  "../content/projects/*.md",
+  { eager: true }
+);
+
+function getFrontmatter(
+  glob: Record<string, { frontmatter: Record<string, unknown> }>,
+  match: string
+) {
+  const key = Object.keys(glob).find((k) => k.includes(match));
+  return key ? glob[key].frontmatter : {};
+}
+
+export const profileData = getFrontmatter(profileGlob, "main") as any;
+export const realtorData = getFrontmatter(projectGlob, "realtor-com") as any;
+export const fanfestData = getFrontmatter(projectGlob, "fanfest-io") as any;
+export const availData = getFrontmatter(projectGlob, "avail-co") as any;
+export const pepsicoData = getFrontmatter(projectGlob, "pepsico") as any;

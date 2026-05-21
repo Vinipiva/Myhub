@@ -6,6 +6,29 @@ const body = (label = "Body") =>
     extension: "md",
   });
 
+const metricFields = fields.object({
+  value: fields.text({ label: "Value (e.g. +70%)" }),
+  label: fields.text({ label: "Label (e.g. Conversion rate)" }),
+  color: fields.text({ label: "Gradient class (e.g. from-red-400 to-red-500)" }),
+  colorFrom: fields.text({ label: "Color from (hex, for inline gradient)" }),
+  colorTo: fields.text({ label: "Color to (hex, for inline gradient)" }),
+  suffix: fields.text({ label: "Suffix (e.g. /mo)" }),
+});
+
+const bulletFields = fields.object({
+  label: fields.text({ label: "Bold label (leave empty if none)" }),
+  text: fields.text({ label: "Text", multiline: true }),
+});
+
+const teamFields = fields.object({
+  name: fields.text({ label: "Team name" }),
+  description: fields.text({ label: "Description", multiline: true }),
+  bullets: fields.array(bulletFields, {
+    label: "Bullets",
+    itemLabel: (props) => props.fields.label.value || props.fields.text.value?.slice(0, 50) || "Bullet",
+  }),
+});
+
 export default config({
   storage: {
     kind: "local",
@@ -35,6 +58,10 @@ export default config({
           itemLabel: (props) => props.value || "Language",
         }),
         availability: fields.text({ label: "Availability note" }),
+        about: fields.array(fields.text({ label: "Paragraph", multiline: true }), {
+          label: "About paragraphs",
+          itemLabel: (props) => props.value?.slice(0, 60) || "Paragraph",
+        }),
         body: body("Long bio"),
       },
     }),
@@ -79,23 +106,64 @@ export default config({
         type: fields.text({ label: "Type" }),
         summary: fields.text({ label: "Summary", multiline: true }),
         order: fields.number({ label: "Sort order" }),
-        metrics: fields.array(
-          fields.object({
-            value: fields.text({ label: "Value (e.g. +70%)" }),
-            label: fields.text({ label: "Label (e.g. Conversion rate)" }),
-          }),
-          {
-            label: "Metrics",
-            itemLabel: (props) =>
-              props.fields.value.value
-                ? `${props.fields.value.value} — ${props.fields.label.value}`
-                : "Metric",
-          }
-        ),
+        metrics: fields.array(metricFields, {
+          label: "Metrics",
+          itemLabel: (props) =>
+            props.fields.value.value
+              ? `${props.fields.value.value} — ${props.fields.label.value}`
+              : "Metric",
+        }),
         tags: fields.array(fields.text({ label: "Tag" }), {
           label: "Tags",
           itemLabel: (props) => props.value || "Tag",
         }),
+        // Realtor / PepsiCo
+        teams: fields.array(teamFields, {
+          label: "Teams",
+          itemLabel: (props) => props.fields.name.value || "Team",
+        }),
+        // Avail
+        paragraphs: fields.array(fields.text({ label: "Paragraph (HTML allowed)", multiline: true }), {
+          label: "Body paragraphs",
+          itemLabel: (props) => props.value?.slice(0, 60) || "Paragraph",
+        }),
+        // FanFest
+        sections: fields.array(
+          fields.object({
+            title: fields.text({ label: "Title" }),
+            text: fields.text({ label: "Text", multiline: true }),
+          }),
+          {
+            label: "Sections",
+            itemLabel: (props) => props.fields.title.value || "Section",
+          }
+        ),
+        logos: fields.array(fields.text({ label: "Filename (e.g. psg.png)" }), {
+          label: "Logo filenames",
+          itemLabel: (props) => props.value || "Logo",
+        }),
+        screens: fields.array(
+          fields.object({
+            src: fields.text({ label: "Image path (e.g. images/cases/fanfest-a.png)" }),
+            alt: fields.text({ label: "Alt text" }),
+          }),
+          {
+            label: "Screens",
+            itemLabel: (props) => props.fields.alt.value || "Screen",
+          }
+        ),
+        // PepsiCo
+        kpiCards: fields.array(
+          fields.object({
+            label: fields.text({ label: "KPI label" }),
+            value: fields.text({ label: "Value (e.g. 2.4M)" }),
+            trend: fields.text({ label: "Trend (e.g. +12%)" }),
+          }),
+          {
+            label: "KPI cards",
+            itemLabel: (props) => props.fields.label.value || "KPI",
+          }
+        ),
         body: body("Project narrative"),
       },
     }),
@@ -137,19 +205,13 @@ export default config({
           description: "Shows self-awareness and growth.",
           multiline: true,
         }),
-        metrics: fields.array(
-          fields.object({
-            value: fields.text({ label: "Value (e.g. +27%)" }),
-            label: fields.text({ label: "Label (e.g. Early user adoption)" }),
-          }),
-          {
-            label: "Metrics",
-            itemLabel: (props) =>
-              props.fields.value.value
-                ? `${props.fields.value.value} — ${props.fields.label.value}`
-                : "Metric",
-          }
-        ),
+        metrics: fields.array(metricFields, {
+          label: "Metrics",
+          itemLabel: (props) =>
+            props.fields.value.value
+              ? `${props.fields.value.value} — ${props.fields.label.value}`
+              : "Metric",
+        }),
         tags: fields.array(fields.text({ label: "Tag" }), {
           label: "Tags",
           itemLabel: (props) => props.value || "Tag",

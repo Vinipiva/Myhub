@@ -16,6 +16,7 @@ interface Presentation {
 interface Props {
   availableProjects: { slug: string; name: string }[];
   initialPresentations: Presentation[];
+  portfolioUrl: string;
 }
 
 const STATIC_SLIDES: SlideOption[] = [
@@ -25,9 +26,7 @@ const STATIC_SLIDES: SlideOption[] = [
   { id: "company-bio", label: "CompanyBIO" },
 ];
 
-const PORTFOLIO_URL = "http://localhost:4321";
-
-export default function PortfolioBuilder({ availableProjects, initialPresentations }: Props) {
+export default function PortfolioBuilder({ availableProjects, initialPresentations, portfolioUrl }: Props) {
   const [presentations, setPresentations] = useState<Presentation[]>(initialPresentations);
   const [selectedSlides, setSelectedSlides] = useState<string[]>([]);
   const [presentationName, setPresentationName] = useState("");
@@ -161,7 +160,7 @@ export default function PortfolioBuilder({ availableProjects, initialPresentatio
                 </div>
                 <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
                   <a
-                    href={`${PORTFOLIO_URL}/p/${p.slug}`}
+                    href={`${portfolioUrl}/p/${p.slug}`}
                     target="_blank"
                     rel="noopener noreferrer"
                     style={{

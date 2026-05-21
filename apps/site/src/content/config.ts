@@ -18,6 +18,7 @@ const profile = defineCollection({
     phone: z.string(),
     languages: z.array(z.string()),
     availability: z.string(),
+    about: z.array(z.string()).optional(),
   }),
 });
 
@@ -36,6 +37,26 @@ const experience = defineCollection({
   }),
 });
 
+const metricSchema = z.object({
+  value: z.string(),
+  label: z.string(),
+  color: z.string().optional(),
+  colorFrom: z.string().optional(),
+  colorTo: z.string().optional(),
+  suffix: z.string().optional(),
+});
+
+const teamSchema = z.object({
+  name: z.string(),
+  description: z.string(),
+  bullets: z.array(
+    z.object({
+      label: z.string().nullable(),
+      text: z.string(),
+    })
+  ),
+});
+
 const projects = defineCollection({
   type: "content",
   schema: z.object({
@@ -45,15 +66,30 @@ const projects = defineCollection({
     type: z.string(),
     summary: z.string(),
     order: z.number(),
-    metrics: z
+    metrics: z.array(metricSchema).optional(),
+    tags: z.array(z.string()),
+    // Realtor / PepsiCo
+    teams: z.array(teamSchema).optional(),
+    // Avail
+    paragraphs: z.array(z.string()).optional(),
+    // FanFest
+    sections: z
+      .array(z.object({ title: z.string(), text: z.string() }))
+      .optional(),
+    logos: z.array(z.string()).optional(),
+    screens: z
+      .array(z.object({ src: z.string(), alt: z.string() }))
+      .optional(),
+    // PepsiCo
+    kpiCards: z
       .array(
         z.object({
-          value: z.string(),
           label: z.string(),
+          value: z.string(),
+          trend: z.string(),
         })
       )
       .optional(),
-    tags: z.array(z.string()),
   }),
 });
 
@@ -70,14 +106,7 @@ const cases = defineCollection({
     tradeoffs: z.string(),
     outcome: z.string(),
     retrospective: z.string().optional(),
-    metrics: z
-      .array(
-        z.object({
-          value: z.string(),
-          label: z.string(),
-        })
-      )
-      .optional(),
+    metrics: z.array(metricSchema).optional(),
     tags: z.array(z.string()),
   }),
 });

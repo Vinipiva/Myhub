@@ -44,6 +44,18 @@
               },
               "label": {
                 "type": "string"
+              },
+              "color": {
+                "type": "string"
+              },
+              "colorFrom": {
+                "type": "string"
+              },
+              "colorTo": {
+                "type": "string"
+              },
+              "suffix": {
+                "type": "string"
               }
             },
             "required": [

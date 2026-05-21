@@ -1,5 +1,7 @@
 ---
 import { availData as data } from "../lib/data";
+
+type Metric = { value: string; label: string; suffix?: string; colorFrom?: string; colorTo?: string };
 ---
 
 <section id="avail" class="relative pt-12 sm:pt-24 overflow-hidden pb-8 sm:pb-12 transform-gpu">
@@ -14,12 +16,12 @@ import { availData as data } from "../lib/data";
           <span class="text-md font-bold text-white bg-[#0a2c4d] px-4 py-2 rounded-full ml-4">{data.type}</span>
         </div>
         <div class="w-full bg-black/40 backdrop-blur-md rounded-lg p-4 sm:p-8 shadow-lg text-gray-200 text-left text-base sm:text-lg mt-6">
-          {data.paragraphs.map((p) => (
+          {data.paragraphs.map((p: string) => (
             <p class="mb-6 last:mb-0" set:html={p} />
           ))}
         </div>
         <div class="flex justify-between mt-6 gap-6 text-center transform-gpu">
-          {data.metrics.map((m) => (
+          {data.metrics.map((m: Metric) => (
             <div class="bg-black/40 backdrop-blur-md p-8 rounded-2xl shadow-lg w-1/2">
               <div
                 class="text-4xl md:text-5xl font-extrabold bg-gradient-to-b text-transparent bg-clip-text"
