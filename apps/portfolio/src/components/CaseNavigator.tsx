@@ -1,8 +1,8 @@
 import { useState } from "react";
-import type { Project } from "../lib/types";
+import type { ContentProject } from "../lib/types";
 
 interface Props {
-  projects: Project[];
+  projects: ContentProject[];
   accent: string;
   foreground: string;
 }
@@ -18,6 +18,7 @@ export default function CaseNavigator({ projects, accent, foreground }: Props) {
         padding: "80px 120px",
         display: "flex",
         flexDirection: "column",
+        fontFamily: "'Inter', sans-serif",
       }}
     >
       <header
@@ -25,28 +26,29 @@ export default function CaseNavigator({ projects, accent, foreground }: Props) {
           display: "flex",
           alignItems: "baseline",
           justifyContent: "space-between",
-          marginBottom: 72,
+          marginBottom: 64,
         }}
       >
-        <div style={{ display: "flex", alignItems: "baseline", gap: 24 }}>
+        <div style={{ display: "flex", alignItems: "baseline", gap: 28 }}>
           <a
             href="/"
             style={{
               color: foreground,
-              opacity: 0.35,
+              opacity: 0.3,
               textDecoration: "none",
-              fontSize: 18,
+              fontSize: 16,
               fontFamily: "monospace",
+              letterSpacing: "0.03em",
             }}
           >
             ← Back
           </a>
           <h1
             style={{
-              fontSize: 56,
-              fontWeight: 700,
+              fontSize: 52,
+              fontWeight: 800,
               color: foreground,
-              letterSpacing: "-0.02em",
+              letterSpacing: "-0.025em",
             }}
           >
             Cases
@@ -54,10 +56,11 @@ export default function CaseNavigator({ projects, accent, foreground }: Props) {
         </div>
         <span
           style={{
-            fontSize: 18,
+            fontSize: 16,
             fontFamily: "monospace",
             color: accent,
             opacity: 0.6,
+            letterSpacing: "0.05em",
           }}
         >
           {projects.length} projects
@@ -68,31 +71,29 @@ export default function CaseNavigator({ projects, accent, foreground }: Props) {
         style={{
           display: "grid",
           gridTemplateColumns: "repeat(2, 1fr)",
-          gap: 24,
+          gap: 20,
           flex: 1,
         }}
       >
         {projects.map((project) => (
           <a
-            key={project.id}
-            href={`/cases/${project.id}`}
-            onMouseEnter={() => setHovered(project.id)}
+            key={project.slug}
+            href={`/cases/${project.slug}`}
+            onMouseEnter={() => setHovered(project.slug)}
             onMouseLeave={() => setHovered(null)}
             style={{
               textDecoration: "none",
               border: `1px solid ${
-                hovered === project.id
-                  ? accent
-                  : "rgba(255,255,255,0.08)"
+                hovered === project.slug ? accent : "rgba(255,255,255,0.08)"
               }`,
-              borderRadius: 8,
-              padding: "48px 56px",
+              borderRadius: 10,
+              padding: "44px 52px",
               display: "flex",
               flexDirection: "column",
               justifyContent: "space-between",
               background:
-                hovered === project.id
-                  ? "rgba(99,102,241,0.05)"
+                hovered === project.slug
+                  ? "rgba(250,204,21,0.04)"
                   : "rgba(255,255,255,0.02)",
               transition: "border-color 0.2s, background 0.2s",
               cursor: "pointer",
@@ -101,21 +102,21 @@ export default function CaseNavigator({ projects, accent, foreground }: Props) {
             <div>
               <p
                 style={{
-                  fontSize: 13,
+                  fontSize: 12,
                   fontFamily: "monospace",
                   textTransform: "uppercase",
-                  letterSpacing: "0.12em",
+                  letterSpacing: "0.14em",
                   color: accent,
                   opacity: 0.7,
-                  marginBottom: 16,
+                  marginBottom: 14,
                 }}
               >
                 {project.type}
               </p>
               <h2
                 style={{
-                  fontSize: 40,
-                  fontWeight: 700,
+                  fontSize: 38,
+                  fontWeight: 800,
                   color: foreground,
                   letterSpacing: "-0.02em",
                   marginBottom: 8,
@@ -125,10 +126,10 @@ export default function CaseNavigator({ projects, accent, foreground }: Props) {
               </h2>
               <p
                 style={{
-                  fontSize: 20,
+                  fontSize: 18,
                   color: foreground,
-                  opacity: 0.5,
-                  marginBottom: 24,
+                  opacity: 0.45,
+                  marginBottom: 0,
                 }}
               >
                 {project.role} · {project.period}
@@ -138,47 +139,51 @@ export default function CaseNavigator({ projects, accent, foreground }: Props) {
             <div
               style={{
                 display: "flex",
-                gap: 32,
+                gap: 24,
                 alignItems: "flex-end",
                 justifyContent: "space-between",
+                marginTop: 32,
               }}
             >
               <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
-                {project.tags.slice(0, 3).map((tag) => (
+                {project.tags?.slice(0, 3).map((tag) => (
                   <span
                     key={tag}
                     style={{
-                      fontSize: 13,
+                      fontSize: 12,
                       fontFamily: "monospace",
                       color: foreground,
                       opacity: 0.3,
                       border: "1px solid rgba(255,255,255,0.1)",
                       borderRadius: 4,
                       padding: "4px 10px",
+                      letterSpacing: "0.04em",
                     }}
                   >
                     {tag}
                   </span>
                 ))}
               </div>
-              {project.metrics[0] && (
+              {project.metrics?.[0] && (
                 <div style={{ textAlign: "right", flexShrink: 0 }}>
                   <p
                     style={{
-                      fontSize: 36,
-                      fontWeight: 700,
+                      fontSize: 34,
+                      fontWeight: 800,
                       color: accent,
                       lineHeight: 1,
+                      letterSpacing: "-0.02em",
                     }}
                   >
                     {project.metrics[0].value}
                   </p>
                   <p
                     style={{
-                      fontSize: 13,
+                      fontSize: 12,
                       color: foreground,
                       opacity: 0.4,
                       marginTop: 4,
+                      fontFamily: "monospace",
                     }}
                   >
                     {project.metrics[0].label}

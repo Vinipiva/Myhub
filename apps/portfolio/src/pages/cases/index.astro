@@ -1,10 +1,10 @@
 ---
 import DeckLayout from "../../layouts/DeckLayout.astro";
 import CaseNavigator from "../../components/CaseNavigator";
-import { getDeckConfig, getDeckProjects } from "../../lib/data";
+import { getDeckConfig, getContentProjects } from "../../lib/data";
 
 const config = getDeckConfig();
-const projects = getDeckProjects();
+const projects = getContentProjects();
 ---
 
 <DeckLayout>

@@ -13,18 +13,27 @@ const { w, h } = config.aspectRatio === "16:9"
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Portfolio — {config.cover.headline}</title>
-    <style>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap"
+      rel="stylesheet"
+    />
+    <style is:global>
       *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
       html, body {
         width: 100%;
         height: 100%;
         overflow: hidden;
         background: var(--bg);
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
       }
       #deck {
         position: absolute;
         transform-origin: top left;
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
       }
+      button { font-family: inherit; }
     </style>
     <style define:vars={{ bg: config.theme.background, fg: config.theme.foreground, accent: config.theme.accent }}>
       :root {
@@ -54,7 +63,7 @@ const { w, h } = config.aspectRatio === "16:9"
         const s = Math.min(vw / w, vh / h);
         deck.style.transform = `scale(${s})`;
         deck.style.left = `${(vw - w * s) / 2}px`;
-        deck.style.top = `${(vh - h * s) / 2}px`;
+        deck.style.top  = `${(vh - h * s) / 2}px`;
       }
       scale();
       window.addEventListener("resize", scale);

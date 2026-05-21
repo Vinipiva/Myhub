@@ -1,9 +1,11 @@
 ---
 import DeckLayout from "../layouts/DeckLayout.astro";
-import { getDeckConfig } from "../lib/data";
+import { getDeckConfig, getContentProjects } from "../lib/data";
 
 const config = getDeckConfig();
-const { cover, theme } = config;
+const { cover } = config;
+const firstCase = getContentProjects()[0];
+const firstCaseHref = firstCase ? `/cases/${firstCase.slug}` : "/cases";
 ---
 
 <DeckLayout>
@@ -17,28 +19,41 @@ const { cover, theme } = config;
         <p class="cover__available">{cover.availableFor}</p>
       )}
     </div>
+
+    <!-- Bottom nav — same pattern as CaseDetail -->
     <nav class="cover__nav">
-      <a href="/cases" class="cover__cta">
+      <span class="cover__site">viniciuspiva.com · 2026</span>
+
+      <a href="/cases" class="cover__cases-link">
         View Cases
-        <span class="cover__cta-arrow">→</span>
       </a>
+
+      <div class="cover__arrows">
+        <a href={firstCaseHref} class="cover__btn">→</a>
+      </div>
     </nav>
-    <footer class="cover__footer">
-      <span>2026</span>
-      <span>·</span>
-      <span>viniciuspiva.com</span>
-    </footer>
   </div>
 </DeckLayout>
 
+<script>
+  // Arrow key / space → go to first case
+  window.addEventListener("keydown", (e) => {
+    if (["ArrowRight", "ArrowDown", " "].includes(e.key)) {
+      e.preventDefault();
+      window.location.href = document.querySelector<HTMLAnchorElement>(".cover__btn")?.href ?? "/cases";
+    }
+  });
+</script>
+
 <style define:vars={{ accent: config.theme.accent, fg: config.theme.foreground }}>
   .cover {
+    box-sizing: border-box;
     width: 100%;
     height: 100%;
     display: flex;
     flex-direction: column;
     justify-content: center;
-    padding: 120px;
+    padding: 80px 120px;
     position: relative;
   }
 
@@ -47,13 +62,13 @@ const { cover, theme } = config;
   }
 
   .cover__label {
-    font-size: 18px;
+    font-size: 13px;
     font-family: monospace;
-    letter-spacing: 0.15em;
+    letter-spacing: 0.18em;
     text-transform: uppercase;
     color: var(--accent);
-    margin-bottom: 40px;
-    opacity: 0.8;
+    margin-bottom: 44px;
+    opacity: 0.65;
   }
 
   .cover__headline {
@@ -62,7 +77,7 @@ const { cover, theme } = config;
     line-height: 1;
     letter-spacing: -0.03em;
     color: var(--fg);
-    margin-bottom: 32px;
+    margin-bottom: 28px;
   }
 
   .cover__subheadline {
@@ -70,65 +85,82 @@ const { cover, theme } = config;
     font-weight: 400;
     color: var(--fg);
     opacity: 0.7;
-    margin-bottom: 24px;
+    margin-bottom: 20px;
   }
 
   .cover__tagline {
-    font-size: 24px;
+    font-size: 22px;
     color: var(--fg);
-    opacity: 0.45;
+    opacity: 0.42;
     max-width: 720px;
-    line-height: 1.5;
-    margin-bottom: 48px;
+    line-height: 1.55;
+    margin-bottom: 44px;
   }
 
   .cover__available {
-    font-size: 16px;
+    font-size: 14px;
     font-family: monospace;
     color: var(--accent);
-    opacity: 0.6;
-    letter-spacing: 0.05em;
+    opacity: 0.55;
+    letter-spacing: 0.06em;
   }
 
+  /* Bottom nav — mirrors CaseDetail's nav bar */
   .cover__nav {
     position: absolute;
-    bottom: 120px;
-    right: 120px;
+    bottom: 44px;
+    left: 0;
+    right: 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 120px;
   }
 
-  .cover__cta {
+  .cover__site {
+    color: var(--fg);
+    opacity: 0.28;
+    font-size: 14px;
+    font-family: monospace;
+    letter-spacing: 0.04em;
+  }
+
+  .cover__cases-link {
+    color: var(--fg);
+    opacity: 0.32;
+    text-decoration: none;
+    font-size: 15px;
+    font-family: monospace;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    transition: opacity 0.2s;
+  }
+
+  .cover__cases-link:hover {
+    opacity: 0.7;
+  }
+
+  .cover__arrows {
+    display: flex;
+    gap: 10px;
+  }
+
+  .cover__btn {
     display: inline-flex;
     align-items: center;
-    gap: 16px;
-    font-size: 22px;
-    font-weight: 500;
-    color: var(--fg);
+    justify-content: center;
+    width: 48px;
+    height: 48px;
+    border-radius: 6px;
+    background: var(--accent);
+    color: #09090b;
+    font-size: 18px;
+    font-weight: 700;
     text-decoration: none;
-    border: 1px solid rgba(255,255,255,0.15);
-    padding: 20px 40px;
-    border-radius: 4px;
-    transition: border-color 0.2s, background 0.2s;
+    transition: opacity 0.2s;
   }
 
-  .cover__cta:hover {
-    border-color: var(--accent);
-    background: rgba(99,102,241,0.08);
-  }
-
-  .cover__cta-arrow {
-    font-size: 26px;
-    color: var(--accent);
-  }
-
-  .cover__footer {
-    position: absolute;
-    bottom: 48px;
-    left: 120px;
-    display: flex;
-    gap: 16px;
-    font-size: 16px;
-    color: var(--fg);
-    opacity: 0.25;
-    font-family: monospace;
+  .cover__btn:hover {
+    opacity: 0.88;
   }
 </style>

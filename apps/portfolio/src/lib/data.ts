@@ -1,18 +1,15 @@
 import type {
   DeckConfig,
-  Project,
   ProfileFrontmatter,
   ExperienceFrontmatter,
   ContentProject,
   ContentProjectFrontmatter,
+  CaseFrontmatter,
+  CaseStory,
   Presentation,
 } from "./types";
 
-// ── Legacy JSON deck (existing routes) ──────────────────────────────────────
-
-const projectFiles = import.meta.glob<Project>("/../../data/projects/*.json", {
-  eager: true,
-});
+// ── Deck config (theme, cover, aspect ratio) ─────────────────────────────────
 
 const deckConfigFile = import.meta.glob<DeckConfig>(
   "/../../data/portfolio/deck.config.json",
@@ -24,22 +21,7 @@ export function getDeckConfig(): DeckConfig {
   return deckConfigFile[key] as DeckConfig;
 }
 
-export function getAllProjects(): Project[] {
-  return Object.values(projectFiles) as Project[];
-}
-
-export function getProjectById(id: string): Project | undefined {
-  return getAllProjects().find((p) => p.id === id);
-}
-
-export function getDeckProjects(): Project[] {
-  const config = getDeckConfig();
-  return config.cases
-    .map((id) => getProjectById(id))
-    .filter((p): p is Project => p !== undefined);
-}
-
-// ── Content .md readers (new presentation system) ────────────────────────────
+// ── Content .md readers ───────────────────────────────────────────────────────
 
 const profileGlob = import.meta.glob<{ frontmatter: ProfileFrontmatter }>(
   "/../site/src/content/profile/*.md",
@@ -69,17 +51,44 @@ export function getExperience(): ExperienceFrontmatter[] {
 }
 
 export function getContentProjects(): ContentProject[] {
-  return Object.entries(contentProjectGlob).map(([filePath, m]) => {
-    const slug = filePath.split("/").pop()!.replace(".md", "");
-    return { slug, ...m.frontmatter };
-  });
+  return Object.entries(contentProjectGlob)
+    .map(([filePath, m]) => {
+      const slug = filePath.split("/").pop()!.replace(".md", "");
+      return { slug, ...m.frontmatter } as ContentProject;
+    })
+    .sort((a, b) => (a.order ?? 99) - (b.order ?? 99));
 }
 
 export function getContentProjectBySlug(slug: string): ContentProject | undefined {
   return getContentProjects().find((p) => p.slug === slug);
 }
 
-// ── Presentations (data/portfolio/presentations/*.json) ──────────────────────
+// Alias used by CaseNavigator and cover page
+export function getDeckProjects(): ContentProject[] {
+  return getContentProjects();
+}
+
+// ── Case stories (Problem / Approach / Tradeoffs / Outcome) ──────────────────
+
+const caseGlob = import.meta.glob<{ frontmatter: CaseFrontmatter }>(
+  "/../site/src/content/cases/*.md",
+  { eager: true }
+);
+
+export function getCases(): CaseStory[] {
+  return Object.entries(caseGlob)
+    .filter(([filePath]) => !filePath.endsWith(".gitkeep"))
+    .map(([filePath, m]) => {
+      const slug = filePath.split("/").pop()!.replace(".md", "");
+      return { slug, ...m.frontmatter } as CaseStory;
+    });
+}
+
+export function getCaseBySlug(slug: string): CaseStory | undefined {
+  return getCases().find((c) => c.slug === slug);
+}
+
+// ── Presentations ─────────────────────────────────────────────────────────────
 
 const presentationGlob = import.meta.glob<Presentation>(
   "/../../data/portfolio/presentations/*.json",

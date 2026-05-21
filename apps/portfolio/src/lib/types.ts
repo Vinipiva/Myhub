@@ -1,7 +1,5 @@
 export type AspectRatio = "16:9" | "9:16";
 
-// --- Frontmatter types (read from .md files via import.meta.glob) ---
-
 export interface ProfileFrontmatter {
   name: string;
   fullName?: string;
@@ -30,6 +28,37 @@ export interface ExperienceFrontmatter {
   tags?: string[];
 }
 
+export interface ProjectMetric {
+  value: string;
+  label: string;
+  color?: string;
+  colorFrom?: string;
+  colorTo?: string;
+  suffix?: string;
+}
+
+export interface TeamBullet {
+  label: string | null;
+  text: string;
+}
+
+export interface ProjectTeam {
+  name: string;
+  description: string;
+  bullets: TeamBullet[];
+}
+
+export interface KpiCard {
+  label: string;
+  value: string;
+  trend: string;
+}
+
+export interface ProjectScreen {
+  src: string;
+  alt: string;
+}
+
 export interface ContentProjectFrontmatter {
   company: string;
   role: string;
@@ -39,13 +68,23 @@ export interface ContentProjectFrontmatter {
   order?: number;
   metrics?: ProjectMetric[];
   tags?: string[];
+  // Realtor / PepsiCo
+  teams?: ProjectTeam[];
+  // Avail
+  paragraphs?: string[];
+  // FanFest
+  sections?: Array<{ title: string; text: string }>;
+  logos?: string[];
+  screens?: ProjectScreen[];
+  // PepsiCo
+  kpiCards?: KpiCard[];
 }
 
 export interface ContentProject extends ContentProjectFrontmatter {
   slug: string;
 }
 
-// --- Presentation config (data/portfolio/presentations/*.json) ---
+// --- Presentation config ---
 
 export type SlideConfig =
   | { type: "about-me" }
@@ -82,19 +121,30 @@ export interface DeckConfig {
   cases: string[];
 }
 
+// ── Case story (from apps/site/src/content/cases/*.md) ───────────────────────
+
+export interface CaseFrontmatter {
+  title?: string;
+  company?: string;
+  role?: string;
+  period?: string;
+  order?: number;
+  problem?: string;
+  approach?: string;
+  tradeoffs?: string;
+  outcome?: string;
+  retrospective?: string;
+  metrics?: ProjectMetric[];
+  tags?: string[];
+}
+
+export interface CaseStory extends CaseFrontmatter {
+  slug: string;
+}
+
 export interface ProjectSection {
   title: string;
   text: string;
-}
-
-export interface ProjectMetric {
-  value: string;
-  label: string;
-}
-
-export interface ProjectScreen {
-  src: string;
-  alt: string;
 }
 
 export interface Project {
