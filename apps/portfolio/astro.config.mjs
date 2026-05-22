@@ -8,6 +8,7 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 export default defineConfig({
   integrations: [react()],
+  publicDir: path.resolve(__dirname, "../site/public"),
   vite: {
     plugins: [tailwindcss()],
     resolve: {

@@ -23,6 +23,9 @@ const bulletFields = fields.object({
 const teamFields = fields.object({
   name: fields.text({ label: "Team name" }),
   description: fields.text({ label: "Description", multiline: true }),
+  problem: fields.text({ label: "Problem (what was broken)", multiline: true }),
+  approach: fields.text({ label: "Approach (what was done)", multiline: true }),
+  outcome: fields.text({ label: "Outcome (what changed)", multiline: true }),
   bullets: fields.array(bulletFields, {
     label: "Bullets",
     itemLabel: (props) => props.fields.label.value || props.fields.text.value?.slice(0, 50) || "Bullet",

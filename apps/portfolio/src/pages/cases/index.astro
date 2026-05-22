@@ -7,11 +7,12 @@ const config = getDeckConfig();
 const projects = getContentProjects();
 ---
 
-<DeckLayout>
+<DeckLayout section="cases">
   <CaseNavigator
     client:only="react"
     projects={projects}
     accent={config.theme.accent}
     foreground={config.theme.foreground}
+    background={config.theme.background}
   />
 </DeckLayout>

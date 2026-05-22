@@ -1,9 +1,21 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import type { ContentProject, CaseStory, ProjectTeam, ProjectMetric, KpiCard, ProjectScreen } from "../lib/types";
+
+// ── Per-project accent colors ─────────────────────────────────────────────────
+
+const ACCENTS: Record<string, string> = {
+  "realtor-com": "#DC2626",
+  "avail-co":    "#2563EB",
+  "fanfest-io":  "#7C3AED",
+};
+const DEFAULT_ACCENT = "#7C3AED";
+
+// ── Slide types ───────────────────────────────────────────────────────────────
 
 type Slide =
   | { kind: "intro" }
   | { kind: "team"; index: number }
+  | { kind: "team-story"; index: number }
   | { kind: "paragraphs" }
   | { kind: "section"; index: number }
   | { kind: "kpi" }
@@ -19,34 +31,57 @@ type Slide =
 function buildSlides(project: ContentProject, caseStory?: CaseStory | null): Slide[] {
   const slides: Slide[] = [{ kind: "intro" }];
   if (project.teams?.length) {
-    project.teams.forEach((_, i) => slides.push({ kind: "team", index: i }));
+    project.teams.forEach((team, i) => {
+      slides.push({ kind: "team", index: i });
+      if (team.problem || team.approach || team.outcome) {
+        slides.push({ kind: "team-story", index: i });
+      }
+    });
   }
-  if (project.paragraphs?.length) {
-    slides.push({ kind: "paragraphs" });
-  }
+  if (project.paragraphs?.length) slides.push({ kind: "paragraphs" });
   if (project.sections?.length) {
     project.sections.forEach((_, i) => slides.push({ kind: "section", index: i }));
   }
-  if (project.kpiCards?.length) {
-    slides.push({ kind: "kpi" });
-  }
-  if (project.logos?.length) {
-    slides.push({ kind: "logos" });
-  }
-  if (project.metrics?.length) {
-    slides.push({ kind: "impact" });
-  }
-  if (project.screens?.length) {
-    slides.push({ kind: "screens" });
-  }
-  // Story slides — appear when a matching case is written in Keystatic
-  if (caseStory?.problem) slides.push({ kind: "problem" });
-  if (caseStory?.approach) slides.push({ kind: "approach" });
-  if (caseStory?.tradeoffs) slides.push({ kind: "tradeoffs" });
-  if (caseStory?.outcome) slides.push({ kind: "outcome" });
-  if (caseStory?.retrospective) slides.push({ kind: "retrospective" });
+  if (project.kpiCards?.length)  slides.push({ kind: "kpi" });
+  if (project.logos?.length)     slides.push({ kind: "logos" });
+  if (project.metrics?.length)   slides.push({ kind: "impact" });
+  if (project.screens?.length)   slides.push({ kind: "screens" });
+  if (caseStory?.problem)        slides.push({ kind: "problem" });
+  if (caseStory?.approach)       slides.push({ kind: "approach" });
+  if (caseStory?.tradeoffs)      slides.push({ kind: "tradeoffs" });
+  if (caseStory?.outcome)        slides.push({ kind: "outcome" });
+  if (caseStory?.retrospective)  slides.push({ kind: "retrospective" });
   return slides;
 }
+
+// ── Shared helpers ────────────────────────────────────────────────────────────
+
+/** Flat card — no blur, no translucency */
+function card(extra?: React.CSSProperties): React.CSSProperties {
+  return {
+    background: "#f8f8f9",
+    border: "1px solid rgba(0,0,0,0.08)",
+    borderRadius: 12,
+    ...extra,
+  };
+}
+
+function Label({ text, accent }: { text: string; accent: string }) {
+  return (
+    <p style={{
+      fontSize: 11,
+      fontFamily: "monospace",
+      textTransform: "uppercase" as const,
+      letterSpacing: "0.18em",
+      color: accent,
+      marginBottom: 40,
+    }}>
+      {text}
+    </p>
+  );
+}
+
+// ── Props ─────────────────────────────────────────────────────────────────────
 
 interface Props {
   project: ContentProject;
@@ -54,9 +89,14 @@ interface Props {
   accent: string;
   foreground: string;
   background: string;
+  prevSlug?: string | null;
+  nextSlug?: string | null;
 }
 
-export default function CaseDetail({ project, caseStory, accent, foreground, background }: Props) {
+// ── Main component ────────────────────────────────────────────────────────────
+
+export default function CaseDetail({ project, caseStory, foreground, prevSlug, nextSlug }: Props) {
+  const accent = ACCENTS[project.slug] ?? DEFAULT_ACCENT;
   const slides = buildSlides(project, caseStory);
   const [current, setCurrent] = useState(0);
 
@@ -64,180 +104,146 @@ export default function CaseDetail({ project, caseStory, accent, foreground, bac
     function onKey(e: KeyboardEvent) {
       if (["ArrowRight", "ArrowDown", " "].includes(e.key)) {
         e.preventDefault();
-        setCurrent((c) => Math.min(c + 1, slides.length - 1));
+        if (current === slides.length - 1 && nextSlug) {
+          window.location.href = `/cases/${nextSlug}`;
+        } else {
+          setCurrent((c) => Math.min(c + 1, slides.length - 1));
+        }
       }
       if (["ArrowLeft", "ArrowUp"].includes(e.key)) {
         e.preventDefault();
-        setCurrent((c) => Math.max(c - 1, 0));
+        if (current === 0 && prevSlug) {
+          window.location.href = `/cases/${prevSlug}`;
+        } else {
+          setCurrent((c) => Math.max(c - 1, 0));
+        }
       }
     }
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [slides.length]);
+  }, [slides.length, current, prevSlug, nextSlug]);
 
   const slide = slides[current];
+  const fg = foreground;
 
   return (
-    <div
-      style={{
-        width: "100%",
-        height: "100%",
-        position: "relative",
+    <div style={{
+      width: "100%",
+      height: "100%",
+      position: "relative",
+      overflow: "hidden",
+      background: "#ffffff",
+      fontFamily: "'Red Hat Text', sans-serif",
+    }}>
+      {/* Slide content — offset below DeckNav */}
+      <div style={{
+        position: "absolute",
+        top: 56, left: 0, right: 0, bottom: 0,
         overflow: "hidden",
-        fontFamily: "'Inter', -apple-system, sans-serif",
-      }}
-    >
-      {/* Slide content */}
-      <div
-        key={`${current}-${slide.kind}`}
-        style={{ width: "100%", height: "100%", animation: "fadeSlide 0.3s ease" }}
-      >
-        {slide.kind === "intro" && (
-          <IntroSlide project={project} accent={accent} fg={foreground} />
-        )}
-        {slide.kind === "team" && project.teams && (
-          <TeamSlide
-            team={project.teams[slide.index]}
-            index={slide.index}
-            total={project.teams.length}
-            accent={accent}
-            fg={foreground}
-          />
-        )}
-        {slide.kind === "paragraphs" && project.paragraphs && (
-          <ParagraphsSlide
-            project={project}
-            paragraphs={project.paragraphs}
-            accent={accent}
-            fg={foreground}
-          />
-        )}
-        {slide.kind === "section" && project.sections && (
-          <SectionSlide
-            section={project.sections[slide.index]}
-            index={slide.index}
-            total={project.sections.length}
-            accent={accent}
-            fg={foreground}
-          />
-        )}
-        {slide.kind === "kpi" && project.kpiCards && (
-          <KpiSlide
-            project={project}
-            kpiCards={project.kpiCards}
-            accent={accent}
-            fg={foreground}
-          />
-        )}
-        {slide.kind === "logos" && project.logos && (
-          <LogosSlide
-            project={project}
-            logos={project.logos}
-            accent={accent}
-            fg={foreground}
-          />
-        )}
-        {slide.kind === "impact" && project.metrics && (
-          <ImpactSlide
-            project={project}
-            metrics={project.metrics}
-            accent={accent}
-            fg={foreground}
-          />
-        )}
-        {slide.kind === "screens" && project.screens && (
-          <ScreensSlide
-            project={project}
-            screens={project.screens}
-            accent={accent}
-            fg={foreground}
-          />
-        )}
-        {slide.kind === "problem" && caseStory?.problem && (
-          <StorySlide
-            label="Problem"
-            hint="Who was hurting and how badly."
-            text={caseStory.problem}
-            accent={accent}
-            fg={foreground}
-          />
-        )}
-        {slide.kind === "approach" && caseStory?.approach && (
-          <StorySlide
-            label="Approach"
-            hint="What you tried. What you cut."
-            text={caseStory.approach}
-            accent={accent}
-            fg={foreground}
-          />
-        )}
-        {slide.kind === "tradeoffs" && caseStory?.tradeoffs && (
-          <StorySlide
-            label="Tradeoffs"
-            hint="What you said no to and why."
-            text={caseStory.tradeoffs}
-            accent={accent}
-            fg={foreground}
-          />
-        )}
-        {slide.kind === "outcome" && caseStory?.outcome && (
-          <StorySlide
-            label="Outcome"
-            hint="What shipped. What you learned."
-            text={caseStory.outcome}
-            accent={accent}
-            fg={foreground}
-          />
-        )}
-        {slide.kind === "retrospective" && caseStory?.retrospective && (
-          <StorySlide
-            label="What I'd change"
-            hint="Self-awareness and growth."
-            text={caseStory.retrospective}
-            accent={accent}
-            fg={foreground}
-          />
-        )}
+        zIndex: 1,
+      }}>
+        <div
+          key={`${current}-${slide.kind}`}
+          style={{ width: "100%", height: "100%", animation: "fadeUp 0.3s ease" }}
+        >
+          {slide.kind === "intro" && (
+            <IntroSlide project={project} accent={accent} fg={fg} />
+          )}
+          {slide.kind === "team" && project.teams && (
+            <TeamSlide
+              team={project.teams[slide.index]}
+              index={slide.index}
+              total={project.teams.length}
+              accent={accent}
+              fg={fg}
+            />
+          )}
+          {slide.kind === "team-story" && project.teams && (
+            <TeamStorySlide team={project.teams[slide.index]} accent={accent} fg={fg} />
+          )}
+          {slide.kind === "paragraphs" && project.paragraphs && (
+            <ParagraphsSlide project={project} paragraphs={project.paragraphs} accent={accent} fg={fg} />
+          )}
+          {slide.kind === "section" && project.sections && (
+            <SectionSlide
+              section={project.sections[slide.index]}
+              index={slide.index}
+              total={project.sections.length}
+              accent={accent}
+              fg={fg}
+            />
+          )}
+          {slide.kind === "kpi" && project.kpiCards && (
+            <KpiSlide project={project} kpiCards={project.kpiCards} accent={accent} fg={fg} />
+          )}
+          {slide.kind === "logos" && project.logos && (
+            <LogosSlide project={project} logos={project.logos} accent={accent} fg={fg} />
+          )}
+          {slide.kind === "impact" && project.metrics && (
+            <ImpactSlide project={project} metrics={project.metrics} accent={accent} fg={fg} />
+          )}
+          {slide.kind === "screens" && project.screens && (
+            <ScreensSlide project={project} screens={project.screens} accent={accent} fg={fg} />
+          )}
+          {slide.kind === "problem" && caseStory?.problem && (
+            <StorySlide label="Problem" hint="Who was hurting and how badly." text={caseStory.problem} accent={accent} fg={fg} />
+          )}
+          {slide.kind === "approach" && caseStory?.approach && (
+            <StorySlide label="Approach" hint="What you tried. What you cut." text={caseStory.approach} accent={accent} fg={fg} />
+          )}
+          {slide.kind === "tradeoffs" && caseStory?.tradeoffs && (
+            <StorySlide label="Tradeoffs" hint="What you said no to and why." text={caseStory.tradeoffs} accent={accent} fg={fg} />
+          )}
+          {slide.kind === "outcome" && caseStory?.outcome && (
+            <StorySlide label="Outcome" hint="What shipped. What you learned." text={caseStory.outcome} accent={accent} fg={fg} />
+          )}
+          {slide.kind === "retrospective" && caseStory?.retrospective && (
+            <StorySlide label="What I'd change" hint="Self-awareness and growth." text={caseStory.retrospective} accent={accent} fg={fg} />
+          )}
+        </div>
       </div>
 
-      {/* Navigation bar */}
-      <nav
-        style={{
-          position: "absolute",
-          bottom: 44,
-          left: 0,
-          right: 0,
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-          padding: "0 120px",
-        }}
-      >
-        <a
-          href="/cases"
-          style={{
-            color: foreground,
-            opacity: 0.28,
-            textDecoration: "none",
-            fontSize: 14,
-            fontFamily: "monospace",
-            letterSpacing: "0.04em",
-          }}
-        >
-          ← All Cases
-        </a>
+      {/* Bottom navigation bar */}
+      <nav style={{
+        position: "absolute",
+        bottom: 36, left: 0, right: 0,
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "space-between",
+        padding: "0 100px",
+        zIndex: 10,
+      }}>
+        {/* Prev case */}
+        {prevSlug ? (
+          <a
+            href={`/cases/${prevSlug}`}
+            style={{
+              color: fg,
+              opacity: 0.28,
+              textDecoration: "none",
+              fontSize: 12,
+              fontFamily: "monospace",
+              letterSpacing: "0.08em",
+            }}
+          >
+            ← Prev case
+          </a>
+        ) : (
+          <span style={{ width: 80 }} />
+        )}
 
+        {/* Dot indicators */}
         <div style={{ display: "flex", gap: 6, alignItems: "center" }}>
           {slides.map((_, i) => (
             <button
               key={i}
               onClick={() => setCurrent(i)}
               style={{
-                width: i === current ? 28 : 8,
-                height: 8,
+                width: i === current ? 28 : 7,
+                height: 7,
                 borderRadius: 4,
                 border: "none",
-                background: i === current ? accent : "rgba(255,255,255,0.16)",
+                background: i === current ? accent : "rgba(0,0,0,0.15)",
                 cursor: "pointer",
                 transition: "width 0.25s ease, background 0.25s ease",
                 padding: 0,
@@ -246,43 +252,59 @@ export default function CaseDetail({ project, caseStory, accent, foreground, bac
           ))}
         </div>
 
-        <div style={{ display: "flex", gap: 10 }}>
+        {/* Arrow buttons */}
+        <div style={{ display: "flex", gap: 10, alignItems: "center" }}>
+          {nextSlug && current === slides.length - 1 && (
+            <a
+              href={`/cases/${nextSlug}`}
+              style={{
+                color: fg,
+                opacity: 0.32,
+                textDecoration: "none",
+                fontSize: 12,
+                fontFamily: "monospace",
+                letterSpacing: "0.08em",
+                marginRight: 12,
+              }}
+            >
+              Next case →
+            </a>
+          )}
           <button
-            onClick={() => setCurrent((c) => Math.max(c - 1, 0))}
-            disabled={current === 0}
+            onClick={() => {
+              if (current === 0 && prevSlug) window.location.href = `/cases/${prevSlug}`;
+              else setCurrent((c) => Math.max(c - 1, 0));
+            }}
             style={{
               background: "transparent",
-              border: `1px solid rgba(255,255,255,${current === 0 ? "0.05" : "0.14"})`,
-              color: foreground,
-              opacity: current === 0 ? 0.2 : 0.8,
-              width: 48,
-              height: 48,
-              borderRadius: 6,
-              cursor: current === 0 ? "default" : "pointer",
-              fontSize: 18,
+              border: `1px solid rgba(0,0,0,${current === 0 && !prevSlug ? "0.06" : "0.10"})`,
+              color: fg,
+              opacity: current === 0 && !prevSlug ? 0.15 : 0.7,
+              width: 44, height: 44,
+              borderRadius: 8,
+              cursor: current === 0 && !prevSlug ? "default" : "pointer",
+              fontSize: 16,
               transition: "opacity 0.2s",
             }}
           >
             ←
           </button>
           <button
-            onClick={() => setCurrent((c) => Math.min(c + 1, slides.length - 1))}
-            disabled={current === slides.length - 1}
+            onClick={() => {
+              if (current === slides.length - 1 && nextSlug) window.location.href = `/cases/${nextSlug}`;
+              else setCurrent((c) => Math.min(c + 1, slides.length - 1));
+            }}
             style={{
-              background: current === slides.length - 1 ? "transparent" : accent,
-              border:
-                current === slides.length - 1
-                  ? "1px solid rgba(255,255,255,0.05)"
-                  : "none",
-              color: current === slides.length - 1 ? foreground : "#09090b",
-              opacity: current === slides.length - 1 ? 0.2 : 1,
-              width: 48,
-              height: 48,
-              borderRadius: 6,
-              cursor: current === slides.length - 1 ? "default" : "pointer",
-              fontSize: 18,
+              background: current < slides.length - 1 ? accent : "transparent",
+              border: current < slides.length - 1 ? "none" : "1px solid rgba(0,0,0,0.06)",
+              color: current < slides.length - 1 ? "#ffffff" : "rgba(0,0,0,0.25)",
+              opacity: current === slides.length - 1 && !nextSlug ? 0.15 : 1,
+              width: 44, height: 44,
+              borderRadius: 8,
+              cursor: current === slides.length - 1 && !nextSlug ? "default" : "pointer",
+              fontSize: 16,
               fontWeight: 700,
-              transition: "background 0.2s, opacity 0.2s",
+              transition: "background 0.2s",
             }}
           >
             →
@@ -291,131 +313,105 @@ export default function CaseDetail({ project, caseStory, accent, foreground, bac
       </nav>
 
       <style>{`
-        @keyframes fadeSlide {
-          from { opacity: 0; transform: translateY(18px); }
+        @keyframes fadeUp {
+          from { opacity: 0; transform: translateY(14px); }
           to   { opacity: 1; transform: translateY(0); }
         }
-        .para-slide strong {
-          color: ${accent};
-          font-weight: 700;
-          opacity: 1;
-        }
+        .para-slide strong { font-weight: 700; }
       `}</style>
     </div>
   );
 }
 
-// ─── Slide components ─────────────────────────────────────────────────────────
+// ── IntroSlide ────────────────────────────────────────────────────────────────
 
-function Label({ text, accent }: { text: string; accent: string }) {
+function IntroSlide({ project, accent, fg }: { project: ContentProject; accent: string; fg: string }) {
+  const ff = "'Red Hat Display', sans-serif";
+  const fm = "'Red Hat Text', sans-serif";
+
   return (
-    <p
-      style={{
-        fontSize: 12,
+    <div style={{
+      width: "100%", height: "100%",
+      padding: "64px 100px",
+      display: "flex",
+      flexDirection: "column",
+      justifyContent: "center",
+    }}>
+      {/* Eyebrow */}
+      <p style={{
+        fontSize: 11,
         fontFamily: "monospace",
-        textTransform: "uppercase",
+        textTransform: "uppercase" as const,
         letterSpacing: "0.18em",
         color: accent,
-        opacity: 0.6,
-        marginBottom: 56,
-      }}
-    >
-      {text}
-    </p>
-  );
-}
-
-function IntroSlide({
-  project,
-  accent,
-  fg,
-}: {
-  project: ContentProject;
-  accent: string;
-  fg: string;
-}) {
-  return (
-    <div
-      style={{
-        width: "100%",
-        height: "100%",
-        padding: "80px 120px",
-        display: "flex",
-        flexDirection: "column",
-        justifyContent: "center",
-      }}
-    >
-      <p
-        style={{
-          fontSize: 13,
-          fontFamily: "monospace",
-          textTransform: "uppercase",
-          letterSpacing: "0.18em",
-          color: accent,
-          opacity: 0.65,
-          marginBottom: 44,
-        }}
-      >
+        marginBottom: 32,
+      }}>
         {project.type} · {project.period}
       </p>
 
-      <h1
-        style={{
-          fontSize: 108,
-          fontWeight: 900,
-          color: fg,
-          letterSpacing: "-0.035em",
-          lineHeight: 1,
-          marginBottom: 24,
-        }}
-      >
+      {/* Company name — solid, large, in accent color */}
+      <h1 style={{
+        fontFamily: ff,
+        fontSize: 108,
+        fontWeight: 900,
+        letterSpacing: "-0.04em",
+        lineHeight: 0.9,
+        marginBottom: 20,
+        color: accent,
+      }}>
         {project.company}
       </h1>
 
-      <p
-        style={{
-          fontSize: 34,
-          color: fg,
-          opacity: 0.48,
-          marginBottom: project.summary ? 44 : 60,
-          fontWeight: 400,
-          letterSpacing: "-0.01em",
-        }}
-      >
+      {/* Role */}
+      <p style={{
+        fontSize: 30,
+        color: fg,
+        opacity: 0.40,
+        marginBottom: project.summary ? 40 : 0,
+        fontWeight: 400,
+        fontFamily: ff,
+        letterSpacing: "-0.01em",
+      }}>
         {project.role}
       </p>
 
+      {/* Summary — left-border accent, flat white */}
       {project.summary && (
-        <p
-          style={{
-            fontSize: 22,
+        <div style={{
+          borderLeft: `3px solid ${accent}`,
+          paddingLeft: 24,
+          maxWidth: 860,
+          marginBottom: 36,
+        }}>
+          <p style={{
+            fontFamily: fm,
+            fontSize: 20,
             color: fg,
-            opacity: 0.58,
-            lineHeight: 1.6,
-            maxWidth: 960,
-            marginBottom: 56,
-          }}
-        >
-          {project.summary}
-        </p>
+            opacity: 0.60,
+            lineHeight: 1.68,
+            fontWeight: 300,
+          }}>
+            {project.summary}
+          </p>
+        </div>
       )}
 
+      {/* Tags */}
       {project.tags && project.tags.length > 0 && (
-        <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
+        <div style={{ display: "flex", gap: 8, flexWrap: "wrap" as const }}>
           {project.tags.map((tag) => (
-            <span
-              key={tag}
-              style={{
-                fontSize: 12,
-                fontFamily: "monospace",
-                color: fg,
-                opacity: 0.32,
-                border: "1px solid rgba(255,255,255,0.1)",
-                borderRadius: 4,
-                padding: "6px 14px",
-                letterSpacing: "0.06em",
-              }}
-            >
+            <span key={tag} style={{
+              fontSize: 10,
+              fontFamily: "monospace",
+              color: fg,
+              opacity: 0.45,
+              border: "1px solid rgba(0,0,0,0.12)",
+              borderRadius: 3,
+              padding: "5px 12px",
+              letterSpacing: "0.08em",
+              textTransform: "uppercase" as const,
+              background: "#ffffff",
+            }}>
               {tag}
             </span>
           ))}
@@ -425,110 +421,88 @@ function IntroSlide({
   );
 }
 
-function TeamSlide({
-  team,
-  index,
-  total,
-  accent,
-  fg,
-}: {
-  team: ProjectTeam;
-  index: number;
-  total: number;
-  accent: string;
-  fg: string;
-}) {
-  return (
-    <div
-      style={{
-        width: "100%",
-        height: "100%",
-        padding: "80px 120px",
-        display: "flex",
-        flexDirection: "column",
-        justifyContent: "center",
-      }}
-    >
-      <Label
-        text={`${String(index + 1).padStart(2, "0")} / ${String(total).padStart(2, "0")} · ${team.name}`}
-        accent={accent}
-      />
+// ── TeamSlide ─────────────────────────────────────────────────────────────────
 
-      <div style={{ display: "flex", gap: 72, alignItems: "flex-start" }}>
+function TeamSlide({ team, index, total, accent, fg }: {
+  team: ProjectTeam; index: number; total: number; accent: string; fg: string;
+}) {
+  const ff = "'Red Hat Display', sans-serif";
+  const fm = "'Red Hat Text', sans-serif";
+
+  return (
+    <div style={{
+      width: "100%", height: "100%",
+      padding: "64px 100px",
+      display: "flex",
+      flexDirection: "column",
+      justifyContent: "center",
+    }}>
+      <Label text={`${String(index + 1).padStart(2, "0")} / ${String(total).padStart(2, "0")} · ${team.name}`} accent={accent} />
+
+      <div style={{ display: "flex", gap: 64, alignItems: "flex-start" }}>
         {/* Left: name + description */}
-        <div style={{ flex: "0 0 460px" }}>
-          <h2
-            style={{
-              fontSize: 58,
-              fontWeight: 800,
-              color: fg,
-              letterSpacing: "-0.025em",
-              lineHeight: 1.1,
-              marginBottom: 28,
-            }}
-          >
+        <div style={{
+          flex: "0 0 400px",
+          borderLeft: `3px solid ${accent}`,
+          paddingLeft: 28,
+        }}>
+          <h2 style={{
+            fontFamily: ff,
+            fontSize: 48,
+            fontWeight: 800,
+            letterSpacing: "-0.025em",
+            lineHeight: 1.08,
+            marginBottom: 18,
+            color: accent,
+          }}>
             {team.name}
           </h2>
-          <p
-            style={{
-              fontSize: 21,
-              color: fg,
-              opacity: 0.48,
-              lineHeight: 1.6,
-            }}
-          >
+          <p style={{
+            fontFamily: fm,
+            fontSize: 18,
+            color: fg,
+            opacity: 0.50,
+            lineHeight: 1.65,
+            fontWeight: 300,
+          }}>
             {team.description}
           </p>
         </div>
 
         {/* Divider */}
-        <div
-          style={{
-            width: 1,
-            alignSelf: "stretch",
-            background: "rgba(255,255,255,0.07)",
-            flexShrink: 0,
-          }}
-        />
+        <div style={{
+          width: 1,
+          alignSelf: "stretch",
+          background: "rgba(0,0,0,0.07)",
+          flexShrink: 0,
+        }} />
 
         {/* Right: bullets */}
-        <div
-          style={{
-            flex: 1,
-            display: "flex",
-            flexDirection: "column",
-            gap: 32,
-          }}
-        >
+        <div style={{ flex: 1, display: "flex", flexDirection: "column", gap: 22 }}>
           {team.bullets.map((bullet, i) => (
-            <div
-              key={i}
-              style={{
-                paddingLeft: 26,
-                borderLeft: `2px solid ${accent}`,
-              }}
-            >
+            <div key={i} style={{
+              paddingLeft: 20,
+              borderLeft: `2px solid ${accent}`,
+            }}>
               {bullet.label && (
-                <p
-                  style={{
-                    fontSize: 16,
-                    fontWeight: 700,
-                    color: fg,
-                    marginBottom: 8,
-                    letterSpacing: "-0.01em",
-                  }}
-                >
+                <p style={{
+                  fontFamily: fm,
+                  fontSize: 14,
+                  fontWeight: 700,
+                  color: fg,
+                  marginBottom: 5,
+                  letterSpacing: "-0.01em",
+                }}>
                   {bullet.label}
                 </p>
               )}
-              <p
-                style={{
-                  fontSize: 20,
-                  color: fg,
-                  opacity: bullet.label ? 0.52 : 0.68,
-                  lineHeight: 1.55,
-                }}
-              >
+              <p style={{
+                fontFamily: fm,
+                fontSize: 18,
+                color: fg,
+                opacity: bullet.label ? 0.48 : 0.62,
+                lineHeight: 1.55,
+              }}>
                 {bullet.text}
               </p>
             </div>
@@ -539,51 +513,163 @@ function TeamSlide({
   );
 }
 
-function ParagraphsSlide({
-  project,
-  paragraphs,
-  accent,
-  fg,
-}: {
-  project: ContentProject;
-  paragraphs: string[];
-  accent: string;
-  fg: string;
-}) {
+// ── TeamStorySlide ────────────────────────────────────────────────────────────
+
+function TeamStorySlide({ team, accent, fg }: { team: ProjectTeam; accent: string; fg: string }) {
+  const ff = "'Red Hat Display', sans-serif";
+  const fm = "'Red Hat Text', sans-serif";
+
   return (
-    <div
-      style={{
-        width: "100%",
-        height: "100%",
-        padding: "80px 120px",
+    <div style={{
+      width: "100%", height: "100%",
+      padding: "56px 100px",
+      display: "flex",
+      gap: 48,
+      alignItems: "stretch",
+    }}>
+      {/* Left: Problem */}
+      <div style={{
+        flex: "0 0 480px",
+        borderLeft: `4px solid ${accent}`,
+        paddingLeft: 32,
         display: "flex",
         flexDirection: "column",
         justifyContent: "center",
-      }}
-    >
-      <Label text={`${project.company} · Overview`} accent={accent} />
+      }}>
+        <p style={{
+          fontFamily: "monospace",
+          fontSize: 10,
+          textTransform: "uppercase" as const,
+          letterSpacing: "0.18em",
+          color: accent,
+          marginBottom: 20,
+        }}>
+          {team.name}
+        </p>
+        <p style={{
+          fontFamily: ff,
+          fontSize: 13,
+          fontWeight: 600,
+          color: fg,
+          opacity: 0.30,
+          letterSpacing: "0.10em",
+          textTransform: "uppercase" as const,
+          marginBottom: 14,
+        }}>
+          Problem
+        </p>
+        <p style={{
+          fontFamily: fm,
+          fontSize: 20,
+          color: fg,
+          opacity: 0.70,
+          lineHeight: 1.70,
+          fontWeight: 300,
+        }}>
+          {team.problem ?? team.description}
+        </p>
+      </div>
 
-      <div className="para-slide" style={{ display: "flex", flexDirection: "column" }}>
+      {/* Divider */}
+      <div style={{ width: 1, background: "rgba(0,0,0,0.07)", flexShrink: 0, alignSelf: "stretch" }} />
+
+      {/* Right: Approach + Outcome */}
+      <div style={{
+        flex: 1,
+        display: "flex",
+        flexDirection: "column",
+        gap: 28,
+        justifyContent: "center",
+      }}>
+        {team.approach && (
+          <div style={{ ...card({ padding: "28px 32px" }) }}>
+            <p style={{
+              fontFamily: ff,
+              fontSize: 12,
+              fontWeight: 600,
+              color: fg,
+              opacity: 0.30,
+              letterSpacing: "0.1em",
+              textTransform: "uppercase" as const,
+              marginBottom: 10,
+            }}>
+              Approach
+            </p>
+            <p style={{
+              fontFamily: fm,
+              fontSize: 18,
+              color: fg,
+              opacity: 0.60,
+              lineHeight: 1.65,
+              fontWeight: 300,
+            }}>
+              {team.approach}
+            </p>
+          </div>
+        )}
+
+        {(team.outcome || team.bullets?.length > 0) && (
+          <div style={{
+            borderLeft: `3px solid ${accent}`,
+            paddingLeft: 24,
+          }}>
+            <p style={{
+              fontFamily: ff,
+              fontSize: 12,
+              fontWeight: 600,
+              color: accent,
+              letterSpacing: "0.10em",
+              textTransform: "uppercase" as const,
+              marginBottom: 10,
+            }}>
+              Outcome
+            </p>
+            {team.outcome ? (
+              <p style={{
+                fontFamily: fm,
+                fontSize: 22,
+                color: fg,
+                opacity: 0.80,
+                lineHeight: 1.55,
+                fontWeight: 500,
+                letterSpacing: "-0.01em",
+              }}>
+                {team.outcome}
+              </p>
+            ) : (
+              <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+                {team.bullets.map((b, i) => (
+                  <div key={i}>
+                    {b.label && <p style={{ fontFamily: fm, fontSize: 13, fontWeight: 700, color: fg, marginBottom: 3 }}>{b.label}</p>}
+                    <p style={{ fontFamily: fm, fontSize: 16, color: fg, opacity: 0.55, lineHeight: 1.5 }}>{b.text}</p>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+// ── ParagraphsSlide ───────────────────────────────────────────────────────────
+
+function ParagraphsSlide({ project, paragraphs, accent, fg }: {
+  project: ContentProject; paragraphs: string[]; accent: string; fg: string;
+}) {
+  const fm = "'Red Hat Text', sans-serif";
+
+  return (
+    <div style={{ width: "100%", height: "100%", padding: "64px 100px", display: "flex", flexDirection: "column", justifyContent: "center" }}>
+      <Label text={`${project.company} · Overview`} accent={accent} />
+      <div style={{ borderLeft: `3px solid ${accent}`, paddingLeft: 28, maxWidth: 1100 }}>
         {paragraphs.map((para, i) => (
           <div key={i}>
-            {i > 0 && (
-              <div
-                style={{
-                  width: "100%",
-                  height: 1,
-                  background: "rgba(255,255,255,0.06)",
-                  margin: "32px 0",
-                }}
-              />
-            )}
+            {i > 0 && <div style={{ width: "100%", height: 1, background: "rgba(0,0,0,0.07)", margin: "24px 0" }} />}
             <p
-              style={{
-                fontSize: 23,
-                color: fg,
-                opacity: 0.7,
-                lineHeight: 1.65,
-                maxWidth: 1240,
-              }}
+              className="para-slide"
+              style={{ fontFamily: fm, fontSize: 22, color: fg, opacity: 0.68, lineHeight: 1.72 }}
               dangerouslySetInnerHTML={{ __html: para }}
             />
           </div>
@@ -593,266 +679,82 @@ function ParagraphsSlide({
   );
 }
 
-function SectionSlide({
-  section,
-  index,
-  total,
-  accent,
-  fg,
-}: {
-  section: { title: string; text: string };
-  index: number;
-  total: number;
-  accent: string;
-  fg: string;
-}) {
-  return (
-    <div
-      style={{
-        width: "100%",
-        height: "100%",
-        padding: "80px 120px",
-        display: "flex",
-        flexDirection: "column",
-        justifyContent: "center",
-      }}
-    >
-      <Label
-        text={`${String(index + 1).padStart(2, "0")} / ${String(total).padStart(2, "0")}`}
-        accent={accent}
-      />
+// ── SectionSlide ──────────────────────────────────────────────────────────────
 
-      <h2
-        style={{
-          fontSize: 68,
-          fontWeight: 800,
-          color: fg,
-          letterSpacing: "-0.025em",
-          lineHeight: 1.08,
-          marginBottom: 40,
-          maxWidth: 1200,
-        }}
-      >
+function SectionSlide({ section, index, total, accent, fg }: {
+  section: { title: string; text: string }; index: number; total: number; accent: string; fg: string;
+}) {
+  const ff = "'Red Hat Display', sans-serif";
+  const fm = "'Red Hat Text', sans-serif";
+
+  return (
+    <div style={{ width: "100%", height: "100%", padding: "64px 100px", display: "flex", flexDirection: "column", justifyContent: "center" }}>
+      <Label text={`${String(index + 1).padStart(2, "0")} / ${String(total).padStart(2, "0")}`} accent={accent} />
+      <h2 style={{
+        fontFamily: ff,
+        fontSize: 64,
+        fontWeight: 800,
+        letterSpacing: "-0.025em",
+        lineHeight: 1.08,
+        marginBottom: 32,
+        maxWidth: 1100,
+        color: accent,
+      }}>
         {section.title}
       </h2>
-
-      <p
-        style={{
-          fontSize: 26,
-          color: fg,
-          opacity: 0.58,
-          lineHeight: 1.65,
-          maxWidth: 1100,
-        }}
-      >
-        {section.text}
-      </p>
-    </div>
-  );
-}
-
-function KpiSlide({
-  project,
-  kpiCards,
-  accent,
-  fg,
-}: {
-  project: ContentProject;
-  kpiCards: KpiCard[];
-  accent: string;
-  fg: string;
-}) {
-  return (
-    <div
-      style={{
-        width: "100%",
-        height: "100%",
-        padding: "80px 120px",
-        display: "flex",
-        flexDirection: "column",
-        justifyContent: "center",
-      }}
-    >
-      <Label text={`${project.company} · Dashboard KPIs`} accent={accent} />
-
-      <div style={{ display: "flex", gap: 28 }}>
-        {kpiCards.map((card, i) => (
-          <div
-            key={i}
-            style={{
-              flex: 1,
-              padding: "44px 36px",
-              border: "1px solid rgba(255,255,255,0.08)",
-              borderRadius: 10,
-              background: "rgba(255,255,255,0.025)",
-            }}
-          >
-            <p
-              style={{
-                fontSize: 12,
-                fontFamily: "monospace",
-                textTransform: "uppercase",
-                letterSpacing: "0.12em",
-                color: fg,
-                opacity: 0.38,
-                marginBottom: 20,
-              }}
-            >
-              {card.label}
-            </p>
-            <p
-              style={{
-                fontSize: 60,
-                fontWeight: 900,
-                color: fg,
-                letterSpacing: "-0.025em",
-                lineHeight: 1,
-                marginBottom: 16,
-              }}
-            >
-              {card.value}
-            </p>
-            <p
-              style={{
-                fontSize: 16,
-                fontFamily: "monospace",
-                fontWeight: 600,
-                color: accent,
-                letterSpacing: "0.04em",
-              }}
-            >
-              {card.trend}
-            </p>
-          </div>
-        ))}
+      <div style={{ borderLeft: `3px solid ${accent}`, paddingLeft: 28, maxWidth: 940 }}>
+        <p style={{ fontFamily: fm, fontSize: 24, color: fg, opacity: 0.58, lineHeight: 1.68 }}>
+          {section.text}
+        </p>
       </div>
     </div>
   );
 }
 
-function LogosSlide({
-  project,
-  logos,
-  accent,
-  fg,
-}: {
-  project: ContentProject;
-  logos: string[];
-  accent: string;
-  fg: string;
-}) {
-  return (
-    <div
-      style={{
-        width: "100%",
-        height: "100%",
-        padding: "80px 120px",
-        display: "flex",
-        flexDirection: "column",
-      }}
-    >
-      <Label text={`${project.company} · Clients & Partners`} accent={accent} />
+// ── ImpactSlide ───────────────────────────────────────────────────────────────
 
-      <div
-        style={{
-          flex: 1,
-          display: "flex",
-          flexWrap: "wrap",
-          gap: 16,
-          alignContent: "center",
-        }}
-      >
-        {logos.map((logo, i) => (
-          <div
-            key={i}
-            style={{
-              width: 128,
-              height: 72,
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              border: "1px solid rgba(255,255,255,0.07)",
-              borderRadius: 8,
-              background: "rgba(255,255,255,0.03)",
-              padding: 16,
-            }}
-          >
-            <img
-              src={`/images/cases/fanfest-logos/${logo}`}
-              alt={logo.replace(".png", "").replace(/-/g, " ")}
-              style={{
-                width: "100%",
-                height: "100%",
-                objectFit: "contain",
-                filter: "grayscale(100%) brightness(2)",
-                opacity: 0.55,
-              }}
-            />
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-}
-
-function ImpactSlide({
-  project,
-  metrics,
-  accent,
-  fg,
-}: {
-  project: ContentProject;
-  metrics: ProjectMetric[];
-  accent: string;
-  fg: string;
+function ImpactSlide({ project, metrics, accent, fg }: {
+  project: ContentProject; metrics: ProjectMetric[]; accent: string; fg: string;
 }) {
-  const fontSize = metrics.length > 3 ? 68 : metrics.length === 3 ? 80 : 96;
+  const ff = "'Red Hat Display', sans-serif";
+  const fm = "'Red Hat Text', sans-serif";
+  const valueSize = metrics.length > 3 ? 64 : metrics.length === 3 ? 76 : 92;
 
   return (
-    <div
-      style={{
-        width: "100%",
-        height: "100%",
-        padding: "80px 120px",
-        display: "flex",
-        flexDirection: "column",
-        justifyContent: "center",
-      }}
-    >
+    <div style={{ width: "100%", height: "100%", padding: "64px 100px", display: "flex", flexDirection: "column", justifyContent: "center" }}>
       <Label text={`${project.company} · Impact`} accent={accent} />
 
-      <div
-        style={{
-          display: "flex",
-          gap: 80,
-          flexWrap: "wrap",
-          alignItems: "flex-end",
-        }}
-      >
+      <div style={{ display: "flex", gap: 1, alignItems: "stretch" }}>
         {metrics.map((m, i) => (
-          <div key={i}>
-            <p
-              style={{
-                fontSize,
-                fontWeight: 900,
-                color: accent,
-                lineHeight: 1,
-                letterSpacing: "-0.03em",
-              }}
-            >
+          <div key={i} style={{
+            flex: "1 1 0",
+            paddingLeft: 32,
+            borderLeft: `3px solid ${i === 0 ? accent : "rgba(0,0,0,0.07)"}`,
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
+          }}>
+            <p style={{
+              fontFamily: ff,
+              fontSize: valueSize,
+              fontWeight: 900,
+              lineHeight: 1,
+              letterSpacing: "-0.03em",
+              marginBottom: 12,
+              color: accent,
+            }}>
               {m.value}
             </p>
-            <p
-              style={{
-                fontSize: 17,
-                color: fg,
-                opacity: 0.42,
-                marginTop: 14,
-                fontWeight: 400,
-                maxWidth: 200,
-                lineHeight: 1.4,
-              }}
-            >
+            <p style={{
+              fontFamily: fm,
+              fontSize: 13,
+              color: fg,
+              opacity: 0.40,
+              letterSpacing: "0.06em",
+              textTransform: "uppercase" as const,
+              lineHeight: 1.45,
+              maxWidth: 200,
+            }}>
               {m.label}
             </p>
           </div>
@@ -862,52 +764,64 @@ function ImpactSlide({
   );
 }
 
-function ScreensSlide({
-  project,
-  screens,
-  accent,
-  fg,
-}: {
-  project: ContentProject;
-  screens: ProjectScreen[];
-  accent: string;
-  fg: string;
+// ── KpiSlide ──────────────────────────────────────────────────────────────────
+
+function KpiSlide({ project, kpiCards, accent, fg }: {
+  project: ContentProject; kpiCards: KpiCard[]; accent: string; fg: string;
+}) {
+  const ff = "'Red Hat Display', sans-serif";
+  const fm = "'Red Hat Text', sans-serif";
+
+  return (
+    <div style={{ width: "100%", height: "100%", padding: "64px 100px", display: "flex", flexDirection: "column", justifyContent: "center" }}>
+      <Label text={`${project.company} · Dashboard KPIs`} accent={accent} />
+      <div style={{ display: "flex", gap: 16 }}>
+        {kpiCards.map((card, i) => (
+          <div key={i} style={{
+            flex: 1,
+            borderLeft: `3px solid ${i === 0 ? accent : "rgba(0,0,0,0.08)"}`,
+            paddingLeft: 24,
+            paddingTop: 8,
+            paddingBottom: 8,
+          }}>
+            <p style={{ fontFamily: fm, fontSize: 11, textTransform: "uppercase" as const, letterSpacing: "0.12em", color: fg, opacity: 0.35, marginBottom: 14 }}>
+              {card.label}
+            </p>
+            <p style={{ fontFamily: ff, fontSize: 52, fontWeight: 900, letterSpacing: "-0.025em", lineHeight: 1, marginBottom: 12, color: accent }}>
+              {card.value}
+            </p>
+            <p style={{ fontFamily: fm, fontSize: 14, fontWeight: 600, color: accent, letterSpacing: "0.04em" }}>
+              {card.trend}
+            </p>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+// ── LogosSlide ────────────────────────────────────────────────────────────────
+
+function LogosSlide({ project, logos, accent, fg: _fg }: {
+  project: ContentProject; logos: string[]; accent: string; fg: string;
 }) {
   return (
-    <div
-      style={{
-        width: "100%",
-        height: "100%",
-        padding: "80px 120px",
-        display: "flex",
-        flexDirection: "column",
-      }}
-    >
-      <Label text={`${project.company} · Screens`} accent={accent} />
-
-      <div
-        style={{
-          flex: 1,
-          display: "flex",
-          gap: 20,
-          overflow: "hidden",
-        }}
-      >
-        {screens.slice(0, 3).map((screen, i) => (
-          <div
-            key={i}
-            style={{
-              flex: 1,
-              borderRadius: 10,
-              overflow: "hidden",
-              border: "1px solid rgba(255,255,255,0.07)",
-              background: "rgba(255,255,255,0.02)",
-            }}
-          >
+    <div style={{ width: "100%", height: "100%", padding: "64px 100px", display: "flex", flexDirection: "column" }}>
+      <Label text={`${project.company} · Clients & Partners`} accent={accent} />
+      <div style={{ flex: 1, display: "flex", flexWrap: "wrap" as const, gap: 12, alignContent: "center" }}>
+        {logos.map((logo, i) => (
+          <div key={i} style={{
+            width: 120, height: 68,
+            display: "flex", alignItems: "center", justifyContent: "center",
+            background: "#f8f8f9",
+            border: "1px solid rgba(0,0,0,0.08)",
+            borderRadius: 8,
+            padding: 14,
+          }}>
             <img
-              src={`/${screen.src}`}
-              alt={screen.alt}
-              style={{ width: "100%", height: "100%", objectFit: "cover" }}
+              src={`/images/cases/fanfest-logos/${logo}`}
+              alt={logo.replace(".png", "").replace(/-/g, " ")}
+              style={{ width: "100%", height: "100%", objectFit: "contain", filter: "grayscale(100%) brightness(0.35)", opacity: 0.65 }}
             />
           </div>
         ))}
@@ -916,86 +830,94 @@ function ScreensSlide({
   );
 }
 
-function StorySlide({
-  label,
-  hint,
-  text,
-  accent,
-  fg,
-}: {
-  label: string;
-  hint: string;
-  text: string;
-  accent: string;
-  fg: string;
+// ── ScreensSlide ──────────────────────────────────────────────────────────────
+
+function ScreensSlide({ project, screens, accent, fg: _fg }: {
+  project: ContentProject; screens: ProjectScreen[]; accent: string; fg: string;
 }) {
   return (
-    <div
-      style={{
-        width: "100%",
-        height: "100%",
-        padding: "80px 120px",
-        display: "flex",
-        flexDirection: "column",
-        justifyContent: "center",
-      }}
-    >
-      {/* Section label */}
-      <p
-        style={{
-          fontSize: 12,
-          fontFamily: "monospace",
-          textTransform: "uppercase",
-          letterSpacing: "0.18em",
-          color: accent,
-          opacity: 0.65,
-          marginBottom: 20,
-        }}
-      >
+    <div style={{ width: "100%", height: "100%", padding: "64px 100px", display: "flex", flexDirection: "column" }}>
+      <Label text={`${project.company} · Screens`} accent={accent} />
+      <div style={{ flex: 1, display: "flex", gap: 16, overflow: "hidden" }}>
+        {screens.slice(0, 3).map((screen, i) => (
+          <div key={i} style={{
+            flex: 1,
+            borderRadius: 10,
+            overflow: "hidden",
+            border: "1px solid rgba(0,0,0,0.10)",
+            boxShadow: "0 4px 20px rgba(0,0,0,0.08)",
+          }}>
+            <img src={`/${screen.src}`} alt={screen.alt} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+// ── StorySlide ────────────────────────────────────────────────────────────────
+
+function StorySlide({ label, hint, text, accent, fg }: {
+  label: string; hint: string; text: string; accent: string; fg: string;
+}) {
+  const ff = "'Red Hat Display', sans-serif";
+  const fm = "'Red Hat Text', sans-serif";
+
+  return (
+    <div style={{
+      width: "100%", height: "100%",
+      padding: "64px 100px",
+      display: "flex",
+      flexDirection: "column",
+      justifyContent: "center",
+    }}>
+      {/* Label */}
+      <p style={{
+        fontSize: 11, fontFamily: "monospace",
+        textTransform: "uppercase" as const, letterSpacing: "0.18em",
+        color: accent,
+        marginBottom: 12,
+      }}>
         {label}
       </p>
 
-      {/* Hint line */}
-      <p
-        style={{
-          fontSize: 14,
-          fontFamily: "monospace",
-          color: fg,
-          opacity: 0.22,
-          letterSpacing: "0.06em",
-          marginBottom: 64,
-          textTransform: "uppercase",
-        }}
-      >
+      {/* Hint */}
+      <p style={{
+        fontFamily: ff,
+        fontSize: 12,
+        color: fg,
+        opacity: 0.20,
+        letterSpacing: "0.08em",
+        textTransform: "uppercase" as const,
+        marginBottom: 48,
+      }}>
         {hint}
       </p>
 
-      {/* Accent bar */}
-      <div
-        style={{
-          width: 48,
-          height: 3,
+      {/* Story text — left border flat card */}
+      <div style={{
+        borderLeft: `4px solid ${accent}`,
+        paddingLeft: 36,
+        maxWidth: 1060,
+      }}>
+        <div style={{
+          width: 32, height: 2,
           background: accent,
-          borderRadius: 2,
-          marginBottom: 48,
-          opacity: 0.7,
-        }}
-      />
-
-      {/* Body text */}
-      <p
-        style={{
-          fontSize: 30,
+          borderRadius: 1,
+          marginBottom: 28,
+        }} />
+        <p style={{
+          fontFamily: fm,
+          fontSize: 28,
           color: fg,
-          opacity: 0.82,
-          lineHeight: 1.72,
-          maxWidth: 1080,
+          opacity: 0.78,
+          lineHeight: 1.75,
           fontWeight: 300,
           letterSpacing: "-0.01em",
-        }}
-      >
-        {text}
-      </p>
+        }}>
+          {text}
+        </p>
+      </div>
     </div>
   );
 }

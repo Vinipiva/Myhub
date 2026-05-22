@@ -46,6 +46,9 @@ export interface ProjectTeam {
   name: string;
   description: string;
   bullets: TeamBullet[];
+  problem?: string;
+  approach?: string;
+  outcome?: string;
 }
 
 export interface KpiCard {

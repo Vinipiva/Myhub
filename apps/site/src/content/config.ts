@@ -49,6 +49,9 @@ const metricSchema = z.object({
 const teamSchema = z.object({
   name: z.string(),
   description: z.string(),
+  problem: z.string().optional(),
+  approach: z.string().optional(),
+  outcome: z.string().optional(),
   bullets: z.array(
     z.object({
       label: z.string().nullable(),
@@ -103,7 +106,7 @@ const cases = defineCollection({
     order: z.number(),
     problem: z.string(),
     approach: z.string(),
-    tradeoffs: z.string(),
+    tradeoffs: z.string().optional(),
     outcome: z.string(),
     retrospective: z.string().optional(),
     metrics: z.array(metricSchema).optional(),

@@ -1,0 +1,18 @@
+---
+import DeckLayout from "../layouts/DeckLayout.astro";
+import TimelineDetail from "../components/TimelineDetail";
+import { getDeckConfig, getExperience } from "../lib/data";
+
+const config = getDeckConfig();
+const experience = getExperience();
+---
+
+<DeckLayout section="timeline">
+  <TimelineDetail
+    client:only="react"
+    experience={experience}
+    accent={config.theme.accent}
+    foreground={config.theme.foreground}
+    background={config.theme.background}
+  />
+</DeckLayout>

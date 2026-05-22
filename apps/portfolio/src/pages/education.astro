@@ -1,0 +1,16 @@
+---
+import DeckLayout from "../layouts/DeckLayout.astro";
+import EducationDetail from "../components/EducationDetail";
+import { getDeckConfig } from "../lib/data";
+
+const config = getDeckConfig();
+---
+
+<DeckLayout section="education">
+  <EducationDetail
+    client:only="react"
+    accent={config.theme.accent}
+    foreground={config.theme.foreground}
+    background={config.theme.background}
+  />
+</DeckLayout>

@@ -8,159 +8,338 @@ const firstCase = getContentProjects()[0];
 const firstCaseHref = firstCase ? `/cases/${firstCase.slug}` : "/cases";
 ---
 
-<DeckLayout>
+<DeckLayout section="cover">
   <div class="cover">
-    <div class="cover__content">
-      <p class="cover__label">Interactive Portfolio</p>
-      <h1 class="cover__headline">{cover.headline}</h1>
-      <p class="cover__subheadline">{cover.subheadline}</p>
-      <p class="cover__tagline">{cover.tagline}</p>
-      {cover.availableFor && (
-        <p class="cover__available">{cover.availableFor}</p>
-      )}
+
+    <!-- ── Body: 2-column editorial layout ── -->
+    <div class="cover__body">
+
+      <!-- Left: name + role + CTA -->
+      <div class="cover__left">
+        <p class="cover__label">
+          <span class="cover__label-grad">Interactive Portfolio</span>
+          <span class="cover__label-sep"> · 2026</span>
+        </p>
+
+        <div class="cover__accent-bar" />
+
+        <h1 class="cover__headline">{cover.headline}</h1>
+
+        <p class="cover__role">{cover.subheadline}</p>
+        <p class="cover__tagline">{cover.tagline}</p>
+
+        <!-- Badge -->
+        <div class="cover__badge">
+          <span class="cover__badge-dot" />
+          <span class="cover__badge-text">
+            {cover.availableFor ?? "Open to new opportunities"}
+          </span>
+        </div>
+
+        <!-- CTAs -->
+        <div class="cover__cta">
+          <a href="/cases" class="cover__btn-primary">View Cases →</a>
+          <a href="/timeline" class="cover__btn-secondary">Career Timeline</a>
+        </div>
+      </div>
+
+      <!-- Right: raw impact numbers — no card, no box -->
+      <div class="cover__right">
+        <p class="cover__impact-label">Impact</p>
+
+        <div class="cover__metric">
+          <span class="cover__metric-value">200M+</span>
+          <span class="cover__metric-desc">Users impacted</span>
+        </div>
+
+        <div class="cover__metric-sep" />
+
+        <div class="cover__metric">
+          <span class="cover__metric-value">$50M+</span>
+          <span class="cover__metric-desc">Revenue driven</span>
+        </div>
+
+        <div class="cover__metric-sep" />
+
+        <div class="cover__metric">
+          <span class="cover__metric-value">10+</span>
+          <span class="cover__metric-desc">Years of craft</span>
+        </div>
+
+        <div class="cover__tags">
+          {["Product Design", "Design Systems", "AI / ML", "Growth"].map((t) => (
+            <span class="cover__tag">{t}</span>
+          ))}
+        </div>
+      </div>
+
     </div>
 
-    <!-- Bottom nav — same pattern as CaseDetail -->
+    <!-- ── Bottom nav ── -->
     <nav class="cover__nav">
       <span class="cover__site">viniciuspiva.com · 2026</span>
-
-      <a href="/cases" class="cover__cases-link">
-        View Cases
-      </a>
-
-      <div class="cover__arrows">
-        <a href={firstCaseHref} class="cover__btn">→</a>
-      </div>
+      <a href={firstCaseHref} class="cover__arrow">→</a>
     </nav>
+
   </div>
 </DeckLayout>
 
 <script>
-  // Arrow key / space → go to first case
   window.addEventListener("keydown", (e) => {
     if (["ArrowRight", "ArrowDown", " "].includes(e.key)) {
       e.preventDefault();
-      window.location.href = document.querySelector<HTMLAnchorElement>(".cover__btn")?.href ?? "/cases";
+      window.location.href =
+        document.querySelector<HTMLAnchorElement>(".cover__arrow")?.href ?? "/cases";
     }
   });
 </script>
 
-<style define:vars={{ accent: config.theme.accent, fg: config.theme.foreground }}>
+<style>
+  /* ── Shell ── */
   .cover {
     box-sizing: border-box;
-    width: 100%;
-    height: 100%;
+    width: 100%; height: 100%;
     display: flex;
     flex-direction: column;
-    justify-content: center;
-    padding: 80px 120px;
+    background: #ffffff;
+    overflow: hidden;
     position: relative;
   }
 
-  .cover__content {
-    max-width: 1100px;
+  /* ── 2-column body ── */
+  .cover__body {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    padding: 80px 120px 56px;
+    gap: 0;
+    min-height: 0;
+  }
+
+  /* ── Left column ── */
+  .cover__left {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding-right: 80px;
   }
 
   .cover__label {
     font-size: 13px;
     font-family: monospace;
-    letter-spacing: 0.18em;
+    letter-spacing: 0.16em;
     text-transform: uppercase;
-    color: var(--accent);
-    margin-bottom: 44px;
-    opacity: 0.65;
+    margin-bottom: 28px;
+  }
+  .cover__label-grad {
+    background: linear-gradient(90deg, #7c3aed, #ec4899, #f59e0b);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    font-weight: 700;
+  }
+  .cover__label-sep {
+    color: rgba(0,0,0,0.30);
+  }
+
+  .cover__accent-bar {
+    width: 64px;
+    height: 3px;
+    background: #7c3aed;
+    border-radius: 2px;
+    margin-bottom: 32px;
   }
 
   .cover__headline {
-    font-size: 120px;
-    font-weight: 700;
-    line-height: 1;
-    letter-spacing: -0.03em;
-    color: var(--fg);
+    font-family: 'Red Hat Display', sans-serif;
+    font-size: 196px;
+    font-weight: 900;
+    line-height: 0.88;
+    letter-spacing: -0.045em;
     margin-bottom: 28px;
+    color: #0f0f12;
   }
 
-  .cover__subheadline {
+  .cover__role {
+    font-family: 'Red Hat Display', sans-serif;
     font-size: 32px;
-    font-weight: 400;
-    color: var(--fg);
-    opacity: 0.7;
-    margin-bottom: 20px;
+    font-weight: 500;
+    color: #374151;
+    margin-bottom: 10px;
+    letter-spacing: -0.01em;
   }
 
   .cover__tagline {
-    font-size: 22px;
-    color: var(--fg);
-    opacity: 0.42;
-    max-width: 720px;
-    line-height: 1.55;
-    margin-bottom: 44px;
+    font-family: 'Red Hat Text', sans-serif;
+    font-size: 20px;
+    color: #6b7280;
+    line-height: 1.60;
+    margin-bottom: 36px;
   }
 
-  .cover__available {
-    font-size: 14px;
+  /* Badge */
+  .cover__badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+    padding: 7px 18px 7px 13px;
+    border: 1px solid rgba(0,0,0,0.13);
+    border-radius: 100px;
+    margin-bottom: 40px;
+    width: fit-content;
+  }
+  .cover__badge-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: #16a34a;
+    flex-shrink: 0;
+    animation: pulse 2.2s ease-in-out infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50%       { opacity: 0.55; }
+  }
+  .cover__badge-text {
+    font-size: 12px;
     font-family: monospace;
-    color: var(--accent);
-    opacity: 0.55;
-    letter-spacing: 0.06em;
+    color: #374151;
+    letter-spacing: 0.05em;
   }
 
-  /* Bottom nav — mirrors CaseDetail's nav bar */
+  /* CTAs */
+  .cover__cta { display: flex; gap: 12px; align-items: center; }
+
+  .cover__btn-primary {
+    display: inline-flex;
+    align-items: center;
+    height: 56px;
+    padding: 0 36px;
+    border-radius: 6px;
+    background: #0f0f12;
+    color: #ffffff;
+    font-size: 15px;
+    font-weight: 600;
+    font-family: 'Red Hat Text', sans-serif;
+    letter-spacing: 0.02em;
+    text-decoration: none;
+    transition: background 0.15s;
+  }
+  .cover__btn-primary:hover { background: #1f1f2e; }
+
+  .cover__btn-secondary {
+    display: inline-flex;
+    align-items: center;
+    height: 56px;
+    padding: 0 28px;
+    border-radius: 6px;
+    background: transparent;
+    border: 1px solid rgba(0,0,0,0.16);
+    color: #374151;
+    font-size: 12px;
+    font-family: monospace;
+    letter-spacing: 0.10em;
+    text-transform: uppercase;
+    text-decoration: none;
+    transition: border-color 0.15s, color 0.15s;
+  }
+  .cover__btn-secondary:hover {
+    border-color: rgba(0,0,0,0.32);
+    color: #111827;
+  }
+
+  /* ── Right column: floating metrics ── */
+  .cover__right {
+    flex: 0 0 480px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    border-left: 1px solid rgba(0,0,0,0.09);
+    padding-left: 80px;
+  }
+
+  .cover__impact-label {
+    font-size: 11px;
+    font-family: monospace;
+    text-transform: uppercase;
+    letter-spacing: 0.20em;
+    color: rgba(0,0,0,0.30);
+    margin-bottom: 28px;
+  }
+
+  .cover__metric {
+    display: flex;
+    flex-direction: column;
+    padding: 12px 0;
+  }
+  .cover__metric-value {
+    font-family: 'Red Hat Display', sans-serif;
+    font-size: 80px;
+    font-weight: 900;
+    letter-spacing: -0.035em;
+    line-height: 1;
+    color: #0f0f12;
+  }
+  .cover__metric-desc {
+    font-size: 13px;
+    font-family: monospace;
+    color: #6b7280;
+    letter-spacing: 0.10em;
+    text-transform: uppercase;
+    margin-top: 6px;
+  }
+  .cover__metric-sep {
+    height: 1px;
+    background: rgba(0,0,0,0.07);
+    margin: 4px 0;
+  }
+
+  .cover__tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 7px;
+    margin-top: 28px;
+  }
+  .cover__tag {
+    font-size: 10px;
+    font-family: monospace;
+    color: rgba(0,0,0,0.40);
+    border: 1px solid rgba(0,0,0,0.10);
+    border-radius: 3px;
+    padding: 4px 10px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  /* ── Bottom nav ── */
   .cover__nav {
     position: absolute;
-    bottom: 44px;
-    left: 0;
-    right: 0;
+    bottom: 44px; left: 0; right: 0;
     display: flex;
     align-items: center;
     justify-content: space-between;
     padding: 0 120px;
+    z-index: 1;
   }
-
   .cover__site {
-    color: var(--fg);
-    opacity: 0.28;
-    font-size: 14px;
-    font-family: monospace;
-    letter-spacing: 0.04em;
-  }
-
-  .cover__cases-link {
-    color: var(--fg);
-    opacity: 0.32;
-    text-decoration: none;
-    font-size: 15px;
+    color: rgba(0,0,0,0.22);
+    font-size: 12px;
     font-family: monospace;
     letter-spacing: 0.06em;
-    text-transform: uppercase;
-    transition: opacity 0.2s;
   }
 
-  .cover__cases-link:hover {
-    opacity: 0.7;
-  }
-
-  .cover__arrows {
-    display: flex;
-    gap: 10px;
-  }
-
-  .cover__btn {
+  .cover__arrow {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    width: 48px;
-    height: 48px;
+    width: 52px; height: 52px;
     border-radius: 6px;
-    background: var(--accent);
-    color: #09090b;
-    font-size: 18px;
+    background: #0f0f12;
+    color: #ffffff;
+    font-size: 20px;
     font-weight: 700;
     text-decoration: none;
-    transition: opacity 0.2s;
+    transition: background 0.15s;
   }
-
-  .cover__btn:hover {
-    opacity: 0.88;
-  }
+  .cover__arrow:hover { background: #1f1f2e; }
 </style>

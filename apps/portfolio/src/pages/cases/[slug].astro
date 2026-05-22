@@ -12,13 +12,18 @@ const { slug } = Astro.params;
 const project = getContentProjectBySlug(slug);
 const caseStory = getCaseBySlug(slug) ?? null;
 const config = getDeckConfig();
+const allProjects = getContentProjects();
 
 if (!project) {
   return Astro.redirect("/cases");
 }
+
+const idx = allProjects.findIndex((p) => p.slug === slug);
+const prevSlug = idx > 0 ? allProjects[idx - 1].slug : null;
+const nextSlug = idx < allProjects.length - 1 ? allProjects[idx + 1].slug : null;
 ---
 
-<DeckLayout>
+<DeckLayout section="cases" caseSlug={slug}>
   <CaseDetail
     client:only="react"
     project={project}
@@ -26,5 +31,7 @@ if (!project) {
     accent={config.theme.accent}
     foreground={config.theme.foreground}
     background={config.theme.background}
+    prevSlug={prevSlug}
+    nextSlug={nextSlug}
   />
 </DeckLayout>
