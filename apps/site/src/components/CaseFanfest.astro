@@ -40,7 +40,7 @@ type Metric = { value: string; label: string };
         <div class="md:col-span-1 space-y-4 sm:space-y-6 bg-black/20 backdrop-blur-lg p-4 sm:p-8 rounded-2xl shadow-xl mt-4 sm:mt-6">
           <div class="flex items-center space-x-4 mb-6">
             <div>
-              <h1 class="text-3xl md:text-6xl text-white">{data.company}</h1>
+              <h2 class="text-3xl md:text-6xl text-white">{data.company}</h2>
               <p class="text-4xl text-gray-200 mb-4 decorative-text">{data.role}</p>
               <div class="flex left">
                 <span class="text-md font-bold text-white bg-black/20 px-4 py-2 rounded-full">{data.period}</span>
@@ -83,15 +83,21 @@ type Metric = { value: string; label: string };
       <!-- Logos -->
       <div class="mt-8 sm:mt-12 transform-gpu">
         <div class="flex flex-wrap justify-center items-center gap-2 sm:gap-4">
-          {data.logos.map((logo: string) => (
-            <div class="h-8 sm:h-16 w-auto">
+          {data.logos.map((logo: string) => {
+            const src = logo.includes("/")
+              ? `/images/cases/${logo}`
+              : `/images/cases/fanfest-logos/${logo}`;
+            const name = logo.split("/").pop()!.replace(/\.(png|jpe?g)$/i, "").replace(/-/g, " ");
+            return (
+            <div class="h-10 w-10 sm:h-16 sm:w-16 rounded-full overflow-hidden flex-shrink-0">
               <img
-                src={`/images/cases/fanfest-logos/${logo}`}
-                alt={logo.replace(/-/g, " ").replace(".png", "")}
-                class="h-full object-contain"
+                src={src}
+                alt={name}
+                class="h-full w-full object-cover"
               />
             </div>
-          ))}
+            );
+          })}
         </div>
       </div>
     </div>

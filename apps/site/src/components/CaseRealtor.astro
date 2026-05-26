@@ -2,8 +2,7 @@
 import { realtorData as data } from "../lib/data";
 
 type Metric = { value: string; label: string; color?: string };
-type Bullet = { label: string | null; text: string };
-type Team = { name: string; description: string; bullets: Bullet[] };
+type Section = { title: string; text: string };
 ---
 
 <section id="realtor" class="relative py-8 sm:py-12 bg-gray-50 overflow-hidden transform-gpu">
@@ -17,7 +16,7 @@ type Team = { name: string; description: string; bullets: Bullet[] };
       <div class="col col-span-1 md:col-span-2 relative transform-gpu">
         <div class="w-full">
           <h2 class="text-4xl sm:text-6xl text-gray-800">{data.company}</h2>
-          <p class="text-2xl sm:text-4xl text-gray-500 mb-4 decorative-text">{data.role}</p>
+          <p class="text-2xl sm:text-4xl text-gray-600 mb-4 decorative-text">{data.role}</p>
           <div class="flex left mt-2">
             <span class="text-md font-bold text-white bg-gray-700 px-4 py-2 rounded-full">{data.period}</span>
             <span class="text-md font-bold text-white bg-gray-700 px-4 py-2 rounded-full ml-4">{data.type}</span>
@@ -44,20 +43,13 @@ type Team = { name: string; description: string; bullets: Bullet[] };
         <img src="/images/cases/rdc.png" alt="Realtor.com mockup" class="w-full h-full object-contain" />
       </div>
 
-      <!-- Right col - teams -->
+      <!-- Right col - sections -->
       <div class="col col-span-1 md:col-span-2 transform-gpu">
         <div class="flex flex-col items-start space-y-6 text-left transform-gpu">
-          {data.teams.map((team: Team) => (
+          {(data.sections ?? []).map((section: Section) => (
             <div class="bg-gray-800/90 p-8 rounded-2xl shadow-lg">
-              <h3 class="text-xl font-bold text-white">{team.name}</h3>
-              <p class="text-lg text-gray-200 mb-4">{team.description}</p>
-              <ul class="list-disc list-inside space-y-2 text-gray-200">
-                {team.bullets.map((b: Bullet) => (
-                  <li>
-                    {b.label && <strong>{b.label}: </strong>}{b.text}
-                  </li>
-                ))}
-              </ul>
+              <h3 class="text-xl font-bold text-white">{section.title}</h3>
+              <p class="text-base text-gray-200 mt-2 leading-relaxed">{section.text}</p>
             </div>
           ))}
         </div>

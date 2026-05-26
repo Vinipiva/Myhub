@@ -69,6 +69,7 @@ const projects = defineCollection({
     type: z.string(),
     summary: z.string(),
     order: z.number(),
+    hidden: z.boolean().optional(),
     metrics: z.array(metricSchema).optional(),
     tags: z.array(z.string()),
     // Realtor / PepsiCo

@@ -9,9 +9,15 @@ const firstCaseHref = firstCase ? `/cases/${firstCase.slug}` : "/cases";
 ---
 
 <DeckLayout section="cover">
-  <div class="cover">
+  <div class="cover" id="cover-slide">
 
-    <!-- ── Body: 2-column editorial layout ── -->
+    <!-- ── Decorative glass spheres (depth) ── -->
+    <div class="csph csph--1"></div>
+    <div class="csph csph--2"></div>
+    <div class="csph csph--3"></div>
+    <div class="csph csph--4"></div>
+
+    <!-- ── Body: 2-column ── -->
     <div class="cover__body">
 
       <!-- Left: name + role + CTA -->
@@ -43,34 +49,78 @@ const firstCaseHref = firstCase ? `/cases/${firstCase.slug}` : "/cases";
         </div>
       </div>
 
-      <!-- Right: raw impact numbers — no card, no box -->
+      <!-- Right: profile photo + decorative shapes -->
       <div class="cover__right">
-        <p class="cover__impact-label">Impact</p>
 
-        <div class="cover__metric">
-          <span class="cover__metric-value">200M+</span>
-          <span class="cover__metric-desc">Users impacted</span>
+        <!-- Decorative rings + scatter (SVG) -->
+        <svg class="cover__shapes" viewBox="0 0 620 820" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
+          <defs>
+            <linearGradient id="rg" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%"   stop-color="#7c3aed"/>
+              <stop offset="50%"  stop-color="#ec4899"/>
+              <stop offset="100%" stop-color="#f59e0b"/>
+            </linearGradient>
+          </defs>
+          <!-- outer ring -->
+          <circle cx="310" cy="380" r="300" fill="none" stroke="url(#rg)" stroke-width="1.5" opacity="0.28"/>
+          <!-- inner ring -->
+          <circle cx="310" cy="380" r="235" fill="none" stroke="url(#rg)" stroke-width="1"   opacity="0.16"/>
+          <!-- dashed inner ring -->
+          <circle cx="310" cy="380" r="172" fill="none" stroke="url(#rg)" stroke-width="0.75" stroke-dasharray="6 12" opacity="0.17"/>
+          <!-- accent dots -->
+          <circle cx="56"  cy="130" r="5"   fill="#7c3aed" opacity="0.55"/>
+          <circle cx="558" cy="150" r="3.5" fill="#ec4899" opacity="0.55"/>
+          <circle cx="38"  cy="590" r="4"   fill="#f59e0b" opacity="0.45"/>
+          <circle cx="578" cy="548" r="6"   fill="#7c3aed" opacity="0.35"/>
+          <circle cx="168" cy="748" r="3"   fill="#ec4899" opacity="0.45"/>
+          <circle cx="452" cy="48"  r="3.5" fill="#f59e0b" opacity="0.50"/>
+          <circle cx="588" cy="330" r="3"   fill="#ec4899" opacity="0.40"/>
+          <circle cx="28"  cy="310" r="4"   fill="#7c3aed" opacity="0.38"/>
+          <!-- cross markers -->
+          <line x1="562" y1="300" x2="562" y2="322" stroke="#ec4899" stroke-width="2"   opacity="0.55"/>
+          <line x1="551" y1="311" x2="573" y2="311" stroke="#ec4899" stroke-width="2"   opacity="0.55"/>
+          <line x1="54"  y1="420" x2="54"  y2="438" stroke="#7c3aed" stroke-width="1.5" opacity="0.50"/>
+          <line x1="45"  y1="429" x2="63"  y2="429" stroke="#7c3aed" stroke-width="1.5" opacity="0.50"/>
+          <!-- diamond top -->
+          <polygon points="310,50 320,66 310,82 300,66" fill="none" stroke="#f59e0b" stroke-width="1.5" opacity="0.45"/>
+          <!-- small square bottom-right -->
+          <rect x="544" y="618" width="12" height="12" rx="2" fill="none" stroke="#7c3aed" stroke-width="1.5" opacity="0.40"/>
+        </svg>
+
+        <!-- Photo area: glass behind → photo → glass in front -->
+        <div class="cover__photo-area">
+
+          <!-- Blur layer behind photo (depth) -->
+          <div class="cover__glass-back"></div>
+
+          <!-- Arch photo with gradient border -->
+          <div class="cover__photo-frame">
+            <div class="cover__photo-wrap">
+              <img src="/images/eu-perfil.png" alt="Vinicius Piva" class="cover__photo" />
+            </div>
+          </div>
+
+
         </div>
 
-        <div class="cover__metric-sep" />
-
-        <div class="cover__metric">
-          <span class="cover__metric-value">$50M+</span>
-          <span class="cover__metric-desc">Revenue driven</span>
+        <!-- Black glass stats box -->
+        <div class="cover__stats-box">
+          <div class="cover__stats-item">
+            <span class="cover__stats-val">200M+</span>
+            <span class="cover__stats-lbl">Users</span>
+          </div>
+          <div class="cover__stats-sep"></div>
+          <div class="cover__stats-item">
+            <span class="cover__stats-val">$50M+</span>
+            <span class="cover__stats-lbl">Revenue</span>
+          </div>
+          <div class="cover__stats-sep"></div>
+          <div class="cover__stats-item">
+            <span class="cover__stats-val">12+</span>
+            <span class="cover__stats-lbl">Years</span>
+          </div>
         </div>
 
-        <div class="cover__metric-sep" />
-
-        <div class="cover__metric">
-          <span class="cover__metric-value">10+</span>
-          <span class="cover__metric-desc">Years of craft</span>
-        </div>
-
-        <div class="cover__tags">
-          {["Product Design", "Design Systems", "AI / ML", "Growth"].map((t) => (
-            <span class="cover__tag">{t}</span>
-          ))}
-        </div>
       </div>
 
     </div>
@@ -92,28 +142,93 @@ const firstCaseHref = firstCase ? `/cases/${firstCase.slug}` : "/cases";
         document.querySelector<HTMLAnchorElement>(".cover__arrow")?.href ?? "/cases";
     }
   });
+
+  // Sky toggle is handled globally by DeckNav
 </script>
 
 <style>
-  /* ── Shell ── */
+  /* ── Shell + CSS variable theming ── */
   .cover {
+    /* dark sky defaults */
+    --text-primary:         #ffffff;
+    --text-secondary:       rgba(255, 255, 255, 0.96);
+    --text-muted:           rgba(255, 255, 255, 0.82);
+    --divider:              rgba(255, 255, 255, 0.12);
+    --btn-primary-bg:       rgba(255, 255, 255, 0.92);
+    --btn-primary-text:     #0f0f12;
+    --btn-secondary-border: rgba(255, 255, 255, 0.28);
+    --btn-secondary-text:   rgba(255, 255, 255, 0.82);
+    --tag-border:           rgba(255, 255, 255, 0.20);
+    --tag-text:             rgba(255, 255, 255, 0.55);
+    --badge-bg:             rgba(255, 255, 255, 0.08);
+    --badge-border:         rgba(255, 255, 255, 0.16);
+
     box-sizing: border-box;
     width: 100%; height: 100%;
     display: flex;
     flex-direction: column;
-    background: #ffffff;
     overflow: hidden;
     position: relative;
   }
 
-  /* ── 2-column body ── */
+  /* vignette — dark sky: strong left overlay for text legibility */
+  .cover::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      linear-gradient(to right,
+        rgba(4, 2, 20, 0.72) 0%,
+        rgba(4, 2, 20, 0.52) 36%,
+        rgba(4, 2, 20, 0.18) 62%,
+        transparent 100%
+      ),
+      linear-gradient(
+        168deg,
+        rgba(4, 2, 20, 0.28) 0%,
+        transparent 50%,
+        rgba(4, 2, 20, 0.20) 100%
+      );
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* ── Light sky variant ── */
+  .cover.sky--light {
+    --text-primary:         #0f0f12;
+    --text-secondary:       #1f2937;
+    --text-muted:           rgba(0, 0, 0, 0.58);
+    --divider:              rgba(0, 0, 0, 0.10);
+    --btn-primary-bg:       #0f0f12;
+    --btn-primary-text:     #ffffff;
+    --btn-secondary-border: rgba(0, 0, 0, 0.25);
+    --btn-secondary-text:   #1f2937;
+    --tag-border:           rgba(0, 0, 0, 0.14);
+    --tag-text:             rgba(0, 0, 0, 0.62);
+    --badge-bg:             rgba(0, 0, 0, 0.06);
+    --badge-border:         rgba(0, 0, 0, 0.14);
+  }
+
+  /* vignette — light sky: gentle tint, no left scrim */
+  .cover.sky--light::before {
+    background: linear-gradient(
+      168deg,
+      rgba(255, 228, 242, 0.22) 0%,
+      rgba(210, 225, 255, 0.04) 52%,
+      rgba(230, 244, 255, 0.18) 100%
+    );
+  }
+
+  /* ── 2-column layout — sem glass card, direto no sky ── */
   .cover__body {
     flex: 1;
     display: flex;
     align-items: center;
-    padding: 80px 120px 56px;
+    padding: 80px 96px 48px;
     gap: 0;
     min-height: 0;
+    position: relative;
+    z-index: 1;
   }
 
   /* ── Left column ── */
@@ -133,14 +248,14 @@ const firstCaseHref = firstCase ? `/cases/${firstCase.slug}` : "/cases";
     margin-bottom: 28px;
   }
   .cover__label-grad {
-    background: linear-gradient(90deg, #7c3aed, #ec4899, #f59e0b);
+    background: linear-gradient(90deg, #a78bfa, #f472b6, #fbbf24);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
     font-weight: 700;
   }
   .cover__label-sep {
-    color: rgba(0,0,0,0.30);
+    color: var(--text-muted);
   }
 
   .cover__accent-bar {
@@ -158,24 +273,27 @@ const firstCaseHref = firstCase ? `/cases/${firstCase.slug}` : "/cases";
     line-height: 0.88;
     letter-spacing: -0.045em;
     margin-bottom: 28px;
-    color: #0f0f12;
+    color: var(--text-primary);
+    transition: color 0.35s;
   }
 
   .cover__role {
     font-family: 'Red Hat Display', sans-serif;
     font-size: 32px;
     font-weight: 500;
-    color: #374151;
+    color: var(--text-secondary);
     margin-bottom: 10px;
     letter-spacing: -0.01em;
+    transition: color 0.35s;
   }
 
   .cover__tagline {
     font-family: 'Red Hat Text', sans-serif;
     font-size: 20px;
-    color: #6b7280;
+    color: var(--text-muted);
     line-height: 1.60;
     margin-bottom: 36px;
+    transition: color 0.35s;
   }
 
   /* Badge */
@@ -184,15 +302,17 @@ const firstCaseHref = firstCase ? `/cases/${firstCase.slug}` : "/cases";
     align-items: center;
     gap: 9px;
     padding: 7px 18px 7px 13px;
-    border: 1px solid rgba(0,0,0,0.13);
+    border: 1px solid var(--badge-border);
     border-radius: 100px;
     margin-bottom: 40px;
     width: fit-content;
+    background: var(--badge-bg);
+    transition: background 0.35s, border-color 0.35s;
   }
   .cover__badge-dot {
     width: 8px; height: 8px;
     border-radius: 50%;
-    background: #16a34a;
+    background: #4ade80;
     flex-shrink: 0;
     animation: pulse 2.2s ease-in-out infinite;
   }
@@ -203,8 +323,9 @@ const firstCaseHref = firstCase ? `/cases/${firstCase.slug}` : "/cases";
   .cover__badge-text {
     font-size: 12px;
     font-family: monospace;
-    color: #374151;
+    color: var(--text-secondary);
     letter-spacing: 0.05em;
+    transition: color 0.35s;
   }
 
   /* CTAs */
@@ -215,131 +336,308 @@ const firstCaseHref = firstCase ? `/cases/${firstCase.slug}` : "/cases";
     align-items: center;
     height: 56px;
     padding: 0 36px;
-    border-radius: 6px;
-    background: #0f0f12;
+    border-radius: 100px;
+    background:
+      linear-gradient(#0f0f12, #0f0f12) padding-box,
+      linear-gradient(90deg, #7c3aed, #ec4899, #f59e0b) border-box;
+    border: 2px solid transparent;
     color: #ffffff;
     font-size: 15px;
     font-weight: 600;
     font-family: 'Red Hat Text', sans-serif;
     letter-spacing: 0.02em;
     text-decoration: none;
-    transition: background 0.15s;
+    transition: box-shadow 0.25s, opacity 0.15s;
   }
-  .cover__btn-primary:hover { background: #1f1f2e; }
+  .cover__btn-primary:hover {
+    opacity: 0.92;
+    box-shadow: 0 8px 28px rgba(124, 58, 237, 0.35);
+  }
 
   .cover__btn-secondary {
     display: inline-flex;
     align-items: center;
     height: 56px;
     padding: 0 28px;
-    border-radius: 6px;
+    border-radius: 100px;
     background: transparent;
-    border: 1px solid rgba(0,0,0,0.16);
-    color: #374151;
+    border: 1px solid var(--btn-secondary-border);
+    color: var(--btn-secondary-text);
     font-size: 12px;
     font-family: monospace;
     letter-spacing: 0.10em;
     text-transform: uppercase;
     text-decoration: none;
-    transition: border-color 0.15s, color 0.15s;
+    transition: border-color 0.35s, color 0.35s, opacity 0.15s;
   }
-  .cover__btn-secondary:hover {
-    border-color: rgba(0,0,0,0.32);
-    color: #111827;
-  }
+  .cover__btn-secondary:hover { opacity: 0.75; }
 
-  /* ── Right column: floating metrics ── */
+  /* ── Right column — photo + shapes ── */
   .cover__right {
-    flex: 0 0 480px;
+    flex: 0 0 580px;
     display: flex;
     flex-direction: column;
+    align-items: center;
     justify-content: center;
-    border-left: 1px solid rgba(0,0,0,0.09);
-    padding-left: 80px;
+    position: relative;
+    gap: 20px;
   }
 
-  .cover__impact-label {
-    font-size: 11px;
+  /* SVG rings — absolute, centered behind photo */
+  .cover__shapes {
+    position: absolute;
+    width: 620px;
+    height: 820px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -54%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* ── Photo area: stacking context for depth layers ── */
+  .cover__photo-area {
+    position: relative;
+    flex-shrink: 0;
+    z-index: 1;
+  }
+
+  /* Glass panel BEHIND photo — blur + tinted offset */
+  .cover__glass-back {
+    position: absolute;
+    width: 406px;
+    height: 706px;
+    border-radius: 203px 203px 28px 28px;
+    background: rgba(124, 58, 237, 0.10);
+    backdrop-filter: blur(28px);
+    -webkit-backdrop-filter: blur(28px);
+    border: 1px solid rgba(255, 255, 255, 0.10);
+    top: 18px;
+    left: 22px;
+    z-index: 0;
+  }
+
+  /* Floating glass card IN FRONT of photo */
+  .cover__glass-front {
+    position: absolute;
+    bottom: 88px;
+    left: -18px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 18px;
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.10);
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+    border: 1px solid rgba(255, 255, 255, 0.20);
+    z-index: 3;
+  }
+  .cover__glass-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: #4ade80;
+    flex-shrink: 0;
+    animation: pulse 2.2s ease-in-out infinite;
+  }
+  .cover__glass-title {
+    font-family: 'Red Hat Text', 'Inter', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    color: #ffffff;
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+  .cover__glass-sub {
     font-family: monospace;
-    text-transform: uppercase;
-    letter-spacing: 0.20em;
-    color: rgba(0,0,0,0.30);
-    margin-bottom: 28px;
+    font-size: 10px;
+    color: rgba(255, 255, 255, 0.58);
+    letter-spacing: 0.06em;
+    line-height: 1;
   }
 
-  .cover__metric {
+  /* Light sky overrides for glass */
+  .cover.sky--light .cover__glass-back {
+    background: rgba(124, 58, 237, 0.07);
+    border-color: rgba(0, 0, 0, 0.07);
+  }
+  .cover.sky--light .cover__glass-front {
+    background: rgba(255, 255, 255, 0.52);
+    border-color: rgba(0, 0, 0, 0.12);
+  }
+  .cover.sky--light .cover__glass-title { color: #0f0f12; }
+  .cover.sky--light .cover__glass-sub   { color: rgba(0, 0, 0, 0.50); }
+
+  /* Gradient border frame */
+  .cover__photo-frame {
+    position: relative;
+    z-index: 2;
+    flex-shrink: 0;
+  }
+  .cover__photo-frame::before {
+    content: '';
+    position: absolute;
+    inset: -3px;
+    border-radius: 193px 193px 27px 27px;
+    background: linear-gradient(135deg, #7c3aed 0%, #ec4899 50%, #f59e0b 100%);
+    z-index: -1;
+  }
+
+  /* Arch-shaped portrait — big */
+  .cover__photo-wrap {
+    width: 380px;
+    height: 680px;
+    border-radius: 190px 190px 24px 24px;
+    overflow: hidden;
+    position: relative;
+  }
+  .cover__photo {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center 5%;
+    display: block;
+  }
+
+  /* ── Black glass stats box ── */
+  .cover__stats-box {
+    display: flex;
+    align-items: stretch;
+    background: rgba(8, 6, 18, 0.68);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.10);
+    border-radius: 16px;
+    position: relative;
+    z-index: 2;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.30), inset 0 1px 0 rgba(255,255,255,0.06);
+  }
+  .cover__stats-item {
     display: flex;
     flex-direction: column;
-    padding: 12px 0;
+    align-items: center;
+    padding: 18px 28px;
+    text-align: center;
   }
-  .cover__metric-value {
+  .cover__stats-val {
     font-family: 'Red Hat Display', sans-serif;
-    font-size: 80px;
+    font-size: 34px;
     font-weight: 900;
+    color: #ffffff;
     letter-spacing: -0.035em;
     line-height: 1;
-    color: #0f0f12;
   }
-  .cover__metric-desc {
-    font-size: 13px;
+  .cover__stats-lbl {
     font-family: monospace;
-    color: #6b7280;
-    letter-spacing: 0.10em;
+    font-size: 9px;
     text-transform: uppercase;
-    margin-top: 6px;
+    letter-spacing: 0.14em;
+    color: rgba(255, 255, 255, 0.40);
+    margin-top: 7px;
   }
-  .cover__metric-sep {
-    height: 1px;
-    background: rgba(0,0,0,0.07);
-    margin: 4px 0;
+  .cover__stats-sep {
+    width: 1px;
+    background: rgba(255, 255, 255, 0.08);
+    margin: 14px 0;
+    flex-shrink: 0;
   }
 
-  .cover__tags {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 7px;
-    margin-top: 28px;
+  /* ── Decorative glass spheres ── */
+  .csph {
+    position: absolute;
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 0;
   }
-  .cover__tag {
-    font-size: 10px;
-    font-family: monospace;
-    color: rgba(0,0,0,0.40);
-    border: 1px solid rgba(0,0,0,0.10);
-    border-radius: 3px;
-    padding: 4px 10px;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
+  /* Large — bleeds bottom-left */
+  .csph--1 {
+    width: 700px; height: 700px;
+    bottom: -280px; left: -160px;
+    background:
+      radial-gradient(ellipse at 30% 28%, rgba(255,255,255,0.22) 0%, rgba(255,255,255,0) 52%),
+      radial-gradient(ellipse at 72% 74%, rgba(255,255,255,0.07) 0%, rgba(255,255,255,0) 38%),
+      rgba(124, 58, 237, 0.07);
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+    border: 1px solid rgba(255,255,255,0.10);
+    box-shadow: inset 0 0 90px rgba(255,255,255,0.04), 0 24px 80px rgba(124,58,237,0.12);
+    transform: perspective(900px) rotateX(18deg) rotateY(12deg);
+  }
+  /* Medium — upper-left, behind headline */
+  .csph--2 {
+    width: 390px; height: 390px;
+    top: -120px; left: 160px;
+    background:
+      radial-gradient(ellipse at 33% 30%, rgba(255,255,255,0.20) 0%, rgba(255,255,255,0) 50%),
+      rgba(236, 72, 153, 0.05);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    border: 1px solid rgba(255,255,255,0.08);
+    box-shadow: inset 0 0 60px rgba(255,255,255,0.03);
+    transform: perspective(700px) rotateX(-14deg) rotateY(20deg) rotateZ(-8deg);
+  }
+  /* Right-side sphere — partially behind photo */
+  .csph--3 {
+    width: 520px; height: 520px;
+    top: 50px; right: -180px;
+    background:
+      radial-gradient(ellipse at 34% 30%, rgba(255,255,255,0.18) 0%, rgba(255,255,255,0) 50%),
+      rgba(245, 158, 11, 0.05);
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+    border: 1px solid rgba(255,255,255,0.08);
+    box-shadow: inset 0 0 70px rgba(255,255,255,0.03), 0 20px 60px rgba(245,158,11,0.08);
+    transform: perspective(800px) rotateX(22deg) rotateY(-20deg) rotateZ(6deg);
+  }
+  /* Small — mid-canvas floating accent */
+  .csph--4 {
+    width: 230px; height: 230px;
+    top: 270px; left: 700px;
+    background:
+      radial-gradient(ellipse at 28% 28%, rgba(255,255,255,0.28) 0%, rgba(255,255,255,0) 48%),
+      rgba(124, 58, 237, 0.06);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border: 1px solid rgba(255,255,255,0.12);
+    box-shadow: inset 0 0 40px rgba(255,255,255,0.04);
+    transform: perspective(500px) rotateX(-10deg) rotateY(26deg);
   }
 
   /* ── Bottom nav ── */
   .cover__nav {
     position: absolute;
-    bottom: 44px; left: 0; right: 0;
+    bottom: 32px; left: 0; right: 0;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 0 120px;
-    z-index: 1;
+    padding: 0 88px;
+    z-index: 2;
   }
   .cover__site {
-    color: rgba(0,0,0,0.22);
+    color: var(--text-muted);
     font-size: 12px;
     font-family: monospace;
     letter-spacing: 0.06em;
+    transition: color 0.35s;
   }
-
   .cover__arrow {
     display: inline-flex;
     align-items: center;
     justify-content: center;
     width: 52px; height: 52px;
-    border-radius: 6px;
-    background: #0f0f12;
+    border-radius: 12px;
+    background:
+      linear-gradient(#0f0f12, #0f0f12) padding-box,
+      linear-gradient(90deg, #7c3aed, #ec4899, #f59e0b) border-box;
+    border: 2px solid transparent;
     color: #ffffff;
     font-size: 20px;
     font-weight: 700;
     text-decoration: none;
-    transition: background 0.15s;
+    transition: box-shadow 0.25s, opacity 0.15s;
   }
-  .cover__arrow:hover { background: #1f1f2e; }
+  .cover__arrow:hover {
+    opacity: 0.9;
+    box-shadow: 0 8px 24px rgba(124, 58, 237, 0.30);
+  }
 </style>

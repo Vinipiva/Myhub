@@ -4,6 +4,36 @@ interface Props {
   background: string;
 }
 
+const ENTRIES = [
+  {
+    period: "2015 – 2016",
+    type: "Postgraduate",
+    degree: "Communication: Contemporary Culture & New Media Studies",
+    institution: "NOVA University Lisbon",
+    location: "Lisbon, Portugal",
+  },
+  {
+    period: "2011 – 2012",
+    type: "Undergraduate Exchange · Sandwich Program",
+    degree: "Design & Visual Communications",
+    institution: "University of Lisbon",
+    location: "Lisbon, Portugal",
+  },
+  {
+    period: "2009 – 2013",
+    type: "Bachelor's",
+    degree: "Communication, Marketing & Advertising",
+    institution: "UNIP – Universidade Paulista",
+    location: "São Paulo, Brazil",
+  },
+];
+
+const LANGUAGES = [
+  { lang: "English", level: "Fluent" },
+  { lang: "Portuguese", level: "Native" },
+  { lang: "Spanish", level: "Conversational" },
+];
+
 export default function EducationDetail({ accent, foreground }: Props) {
   const ff = "'Red Hat Display', 'Inter', sans-serif";
   const fm = "'Red Hat Text', 'Inter', sans-serif";
@@ -14,141 +44,170 @@ export default function EducationDetail({ accent, foreground }: Props) {
       style={{
         width: "100%",
         height: "100%",
-        paddingTop: 56,
         display: "flex",
         flexDirection: "column",
-        justifyContent: "center",
-        padding: "136px 120px 120px",
+        padding: "64px 120px 72px",
         position: "relative",
         overflow: "hidden",
+        boxSizing: "border-box",
       }}
     >
-      {/* Decorative bg */}
-      <img
-        src="/images/sketch-pen.png"
-        alt=""
-        aria-hidden
-        style={{
-          position: "absolute",
-          right: 100,
-          bottom: 60,
-          width: 280,
-          opacity: 0.04,
-          transform: "rotate(8deg)",
-          pointerEvents: "none",
-        }}
-      />
+      {/* Header */}
+      <div style={{ marginBottom: 52 }}>
+        <p
+          style={{
+            fontFamily: mono,
+            fontSize: 11,
+            textTransform: "uppercase",
+            letterSpacing: "0.22em",
+            color: accent,
+            marginBottom: 18,
+          }}
+        >
+          Education
+        </p>
+        <div
+          style={{
+            width: 52,
+            height: 3,
+            background: accent,
+            borderRadius: 2,
+          }}
+        />
+      </div>
 
-      <p
-        style={{
-          fontFamily: mono,
-          fontSize: 12,
-          textTransform: "uppercase",
-          letterSpacing: "0.2em",
-          color: accent,
-          opacity: 0.65,
-          marginBottom: 48,
-        }}
-      >
-        Education
-      </p>
+      {/* Education entries */}
+      <div style={{ display: "flex", flexDirection: "column", gap: 0, flex: 1 }}>
+        {ENTRIES.map((entry, i) => (
+          <div
+            key={i}
+            style={{
+              display: "flex",
+              alignItems: "flex-start",
+              gap: 0,
+              paddingBottom: i < ENTRIES.length - 1 ? 36 : 0,
+              borderBottom: i < ENTRIES.length - 1
+                ? `1px solid rgba(${foreground === "#ffffff" ? "255,255,255" : "0,0,0"},0.07)`
+                : "none",
+              marginBottom: i < ENTRIES.length - 1 ? 36 : 0,
+            }}
+          >
+            {/* Year column */}
+            <div style={{ flex: "0 0 180px", paddingTop: 6 }}>
+              <span
+                style={{
+                  fontFamily: mono,
+                  fontSize: 12,
+                  color: accent,
+                  letterSpacing: "0.08em",
+                  opacity: 0.85,
+                }}
+              >
+                {entry.period}
+              </span>
+            </div>
 
-      <div
-        style={{
-          width: 56,
-          height: 3,
-          background: accent,
-          borderRadius: 2,
-          marginBottom: 40,
-          opacity: 0.75,
-        }}
-      />
+            {/* Content column */}
+            <div style={{ flex: 1 }}>
+              <p
+                style={{
+                  fontFamily: mono,
+                  fontSize: 10,
+                  textTransform: "uppercase",
+                  letterSpacing: "0.14em",
+                  color: foreground,
+                  opacity: 0.38,
+                  marginBottom: 8,
+                }}
+              >
+                {entry.type}
+              </p>
+              <h3
+                style={{
+                  fontFamily: ff,
+                  fontSize: 34,
+                  fontWeight: 800,
+                  color: foreground,
+                  letterSpacing: "-0.025em",
+                  lineHeight: 1.1,
+                  marginBottom: 10,
+                  opacity: 0.92,
+                }}
+              >
+                {entry.degree}
+              </h3>
+              <p
+                style={{
+                  fontFamily: fm,
+                  fontSize: 16,
+                  color: foreground,
+                  opacity: 0.48,
+                  letterSpacing: "0",
+                }}
+              >
+                {entry.institution} · {entry.location}
+              </p>
+            </div>
+          </div>
+        ))}
+      </div>
 
-      {/* Placeholder content */}
+      {/* Languages row */}
       <div
         style={{
           display: "flex",
-          flexDirection: "column",
-          gap: 48,
-          maxWidth: 900,
+          alignItems: "center",
+          gap: 32,
+          marginTop: 44,
+          paddingTop: 32,
+          borderTop: `1px solid rgba(${foreground === "#ffffff" ? "255,255,255" : "0,0,0"},0.08)`,
         }}
       >
-        {/* Graphic Design background */}
-        <div>
-          <p
-            style={{
-              fontFamily: mono,
-              fontSize: 11,
-              color: foreground,
-              opacity: 0.28,
-              letterSpacing: "0.1em",
-              textTransform: "uppercase",
-              marginBottom: 12,
-            }}
-          >
-            ~2004 · Formal education
-          </p>
-          <h3
-            style={{
-              fontFamily: ff,
-              fontSize: 42,
-              fontWeight: 700,
-              color: foreground,
-              letterSpacing: "-0.02em",
-              lineHeight: 1.1,
-              marginBottom: 10,
-              opacity: 0.3,
-              fontStyle: "italic",
-            }}
-          >
-            Content to be added
-          </h3>
-          <p
-            style={{
-              fontFamily: fm,
-              fontSize: 18,
-              color: foreground,
-              opacity: 0.25,
-              lineHeight: 1.6,
-            }}
-          >
-            Add your degree, institution, and period via Keystatic → Education
-          </p>
-        </div>
-
-        {/* Self-taught journey note */}
-        <div
+        <span
           style={{
-            borderLeft: `2px solid ${accent}`,
-            paddingLeft: 24,
+            fontFamily: mono,
+            fontSize: 10,
+            textTransform: "uppercase",
+            letterSpacing: "0.18em",
+            color: foreground,
+            opacity: 0.30,
+            flex: "0 0 180px",
           }}
         >
-          <p
-            style={{
-              fontFamily: ff,
-              fontSize: 26,
-              fontWeight: 300,
-              color: foreground,
-              opacity: 0.55,
-              lineHeight: 1.65,
-              letterSpacing: "-0.01em",
-            }}
-          >
-            Started as a graphic designer 20 years ago, then moved by a passion
-            for creating experiences, became a product designer in 2013.
-          </p>
-          <p
-            style={{
-              fontFamily: mono,
-              fontSize: 11,
-              color: foreground,
-              opacity: 0.25,
-              marginTop: 12,
-              letterSpacing: "0.08em",
-            }}
-          >
-            — profile.md
-          </p>
+          Languages
+        </span>
+        <div style={{ display: "flex", gap: 24 }}>
+          {LANGUAGES.map(({ lang, level }) => (
+            <div key={lang} style={{ display: "flex", alignItems: "center", gap: 8 }}>
+              <span
+                style={{
+                  fontFamily: ff,
+                  fontSize: 18,
+                  fontWeight: 700,
+                  color: foreground,
+                  opacity: 0.82,
+                  letterSpacing: "-0.01em",
+                }}
+              >
+                {lang}
+              </span>
+              <span
+                style={{
+                  fontFamily: mono,
+                  fontSize: 10,
+                  textTransform: "uppercase",
+                  letterSpacing: "0.10em",
+                  color: foreground,
+                  opacity: 0.32,
+                  border: `1px solid rgba(${foreground === "#ffffff" ? "255,255,255" : "0,0,0"},0.15)`,
+                  borderRadius: 3,
+                  padding: "2px 8px",
+                }}
+              >
+                {level}
+              </span>
+            </div>
+          ))}
         </div>
       </div>
 
@@ -156,7 +215,7 @@ export default function EducationDetail({ accent, foreground }: Props) {
       <div
         style={{
           position: "absolute",
-          bottom: 44,
+          bottom: 36,
           left: 120,
           right: 120,
           display: "flex",

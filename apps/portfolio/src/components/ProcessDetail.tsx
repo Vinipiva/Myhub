@@ -15,7 +15,7 @@ const SLIDES = [
     body: "Every project starts with a clear-eyed diagnosis. I use heuristic reviews, user interviews, and stakeholder alignment to map where the real friction lives — not just the surface symptoms.",
     evidence: "Realtor.com · 2023–2025",
     evidenceNote: "Conducted research across three teams — Rentals, Online Store, and UpNest CRM — before proposing any design direction.",
-    image: "/images/cases/rdc.png",
+    image: "/images/process-1.jpg",
   },
   {
     index: "02",
@@ -24,7 +24,7 @@ const SLIDES = [
     body: "Building from scratch or restructuring from chaos, I create the foundation that scales. A component library built right means the product team ships faster, the brand stays consistent, and design debt doesn't compound.",
     evidence: "FanFest.io · 2021–2025",
     evidenceNote: "Established the full design system and UX/UI direction from zero — before a single PSG or ManCity contract existed.",
-    image: "/images/cases/fanfest-a.png",
+    image: "/images/process-3.jpg",
   },
   {
     index: "03",
@@ -33,7 +33,7 @@ const SLIDES = [
     body: "I embed into cross-functional teams — product, engineering, data, and business — working directly with decision-makers. I've co-crafted investor decks with CEOs and redesigned CRM workflows alongside sales ops teams.",
     evidence: "FanFest.io + Avail.co · 2021–2025",
     evidenceNote: "Worked directly with CEO on product vision and investor strategy at FanFest; owned the full marketing squad at Avail.",
-    image: "/images/cases/avail-screens.png",
+    image: "/images/process-2.jpg",
   },
   {
     index: "04",
@@ -42,7 +42,7 @@ const SLIDES = [
     body: "Design is only as good as its impact. I track what ships, measure how it performs, and iterate on real data. From +70% conversion to 40–60% faster task completion — the metrics are always the goal, not the output.",
     evidence: "Avail.co + Realtor.com",
     evidenceNote: "Marketing team updates 84% faster without engineering. Rental unique lead submissions up +12.5%. Mobile drop-off cut from ~90% to under 10%.",
-    image: null,
+    image: "/images/process-4.jpg",
   },
   {
     index: "05",
@@ -51,7 +51,7 @@ const SLIDES = [
     body: "I've integrated AI into products before it was the default. From NLP-powered chatbots that saved $7M/year to conversational rental search MVPs and fan personalization engines — I build with emerging tech as a design material, not an afterthought.",
     evidence: "Oi Telecom · 2019 · FanFest.io · Realtor.com",
     evidenceNote: "Led UX for Joice (2019 AI chatbot), FanFest gamification AI, and Realtor.com conversational AI search — across three different domains.",
-    image: null,
+    image: "/images/process-5.jpg",
   },
 ] as const;
 
@@ -84,7 +84,6 @@ export default function ProcessDetail({ accent, foreground }: Props) {
       style={{
         width: "100%",
         height: "100%",
-        paddingTop: 56,
         position: "relative",
         overflow: "hidden",
         fontFamily: fm,

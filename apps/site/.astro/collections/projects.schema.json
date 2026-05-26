@@ -22,6 +22,9 @@
         "order": {
           "type": "number"
         },
+        "hidden": {
+          "type": "boolean"
+        },
         "metrics": {
           "type": "array",
           "items": {

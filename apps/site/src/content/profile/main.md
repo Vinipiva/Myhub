@@ -3,7 +3,7 @@ name: Vinicius Piva
 fullName: Vinicius Rodrigues Piva de Carvalho
 role: Senior Product Designer
 tagline: Aligning vision and user needs to drive growth and simplify complexity
-summary: For over a decade, shaping digital products that drive growth, clarity, and business outcomes for global brands and startups.
+summary: 12+ years shaping digital products that drive growth, clarity, and business outcomes for global brands and startups.
 impactStatement: I solve complex challenges with elegant, data-driven solutions that have scaled to millions of users and generated tens of millions in revenue. Embracing the new AI era, I integrate generative intelligence and automation to craft tomorrow's products today.
 impactUsers: "200M+"
 impactRevenue: "$50M+"

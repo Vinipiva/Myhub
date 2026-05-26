@@ -47,7 +47,7 @@ export default function Contact() {
         />
       </div>
       <div className="mx-auto max-w-2xl text-center">
-        <h2 className="text-balance text-gray-500 text-3xl text-5xl md:text-6xl decorative-text">
+        <h2 className="text-balance text-gray-600 text-5xl md:text-6xl decorative-text">
           Contact
         </h2>
       </div>
@@ -72,7 +72,7 @@ export default function Contact() {
                   href="https://www.linkedin.com/in/vpcarvalho/"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-cyan-600 hover:underline"
+                  className="text-cyan-700 hover:underline"
                 >
                   linkedin.com/in/viniciuspiva
                 </a>
@@ -100,7 +100,7 @@ export default function Contact() {
                   id="full-name"
                   autoComplete="name"
                   required
-                  className={`block w-full rounded-md bg-white px-3.5 py-2 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 ${errors["full-name"] ? "border border-red-500" : ""}`}
+                  className={`block w-full rounded-md bg-white px-3.5 py-2 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 ${errors["full-name"] ? "border border-red-500" : ""}`}
                 />
                 {errors["full-name"] && (
                   <span className="text-red-600 text-xs mt-1 block">{errors["full-name"]}</span>
@@ -117,7 +117,7 @@ export default function Contact() {
                   name="company"
                   id="company"
                   autoComplete="organization"
-                  className="block w-full rounded-md bg-white px-3.5 py-2 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600"
+                  className="block w-full rounded-md bg-white px-3.5 py-2 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600"
                 />
               </div>
             </div>
@@ -132,7 +132,7 @@ export default function Contact() {
                   id="email"
                   autoComplete="email"
                   required
-                  className={`block w-full rounded-md bg-white px-3.5 py-2 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 ${errors.email ? "border border-red-500" : ""}`}
+                  className={`block w-full rounded-md bg-white px-3.5 py-2 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 ${errors.email ? "border border-red-500" : ""}`}
                 />
                 {errors.email && (
                   <span className="text-red-600 text-xs mt-1 block">{errors.email}</span>
@@ -148,7 +148,7 @@ export default function Contact() {
                   name="message"
                   id="message"
                   rows={4}
-                  className="block w-full rounded-md bg-white px-3.5 py-2 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600"
+                  className="block w-full rounded-md bg-white px-3.5 py-2 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600"
                 />
               </div>
             </div>

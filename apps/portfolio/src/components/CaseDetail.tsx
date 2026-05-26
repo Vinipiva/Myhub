@@ -1,12 +1,28 @@
 import React, { useState, useEffect } from "react";
 import type { ContentProject, CaseStory, ProjectTeam, ProjectMetric, KpiCard, ProjectScreen } from "../lib/types";
 
+// ── Per-project screen layout config ─────────────────────────────────────────
+// skipHero: skip screens[0] since it's used as the intro hero
+// flex: flex-grow ratio for each visible screen (in order)
+
+const SCREEN_LAYOUTS: Record<string, { skipHero: boolean; flex: number[] }> = {
+  "okamed":                { skipHero: true, flex: [2, 1] },
+  "realtor-com":           { skipHero: true, flex: [2, 1] },
+  "realtor-online-store":  { skipHero: true, flex: [2, 1, 1] },
+  "fanfest-io":            { skipHero: true, flex: [1, 1, 1] },
+};
+
 // ── Per-project accent colors ─────────────────────────────────────────────────
 
 const ACCENTS: Record<string, string> = {
-  "realtor-com": "#DC2626",
-  "avail-co":    "#2563EB",
-  "fanfest-io":  "#7C3AED",
+  "okamed":               "#1D4ED8",
+  "pepsico":              "#004B93",
+  "realtor-com":          "#DC2626",
+  "realtor-rentals":      "#DC2626",
+  "realtor-online-store": "#DC2626",
+  "realtor-upnest":       "#DC2626",
+  "avail-co":             "#2563EB",
+  "fanfest-io":           "#7C3AED",
 };
 const DEFAULT_ACCENT = "#7C3AED";
 
@@ -69,7 +85,7 @@ function card(extra?: React.CSSProperties): React.CSSProperties {
 function Label({ text, accent }: { text: string; accent: string }) {
   return (
     <p style={{
-      fontSize: 11,
+      fontSize: 12,
       fontFamily: "monospace",
       textTransform: "uppercase" as const,
       letterSpacing: "0.18em",
@@ -132,13 +148,13 @@ export default function CaseDetail({ project, caseStory, foreground, prevSlug, n
       height: "100%",
       position: "relative",
       overflow: "hidden",
-      background: "#ffffff",
+      background: "transparent",
       fontFamily: "'Red Hat Text', sans-serif",
     }}>
-      {/* Slide content — offset below DeckNav */}
+      {/* Slide content */}
       <div style={{
         position: "absolute",
-        top: 56, left: 0, right: 0, bottom: 0,
+        top: 0, left: 0, right: 0, bottom: 0,
         overflow: "hidden",
         zIndex: 1,
       }}>
@@ -219,7 +235,7 @@ export default function CaseDetail({ project, caseStory, foreground, prevSlug, n
             href={`/cases/${prevSlug}`}
             style={{
               color: fg,
-              opacity: 0.28,
+              opacity: 0.55,
               textDecoration: "none",
               fontSize: 12,
               fontFamily: "monospace",
@@ -259,7 +275,7 @@ export default function CaseDetail({ project, caseStory, foreground, prevSlug, n
               href={`/cases/${nextSlug}`}
               style={{
                 color: fg,
-                opacity: 0.32,
+                opacity: 0.55,
                 textDecoration: "none",
                 fontSize: 12,
                 fontFamily: "monospace",
@@ -328,14 +344,15 @@ export default function CaseDetail({ project, caseStory, foreground, prevSlug, n
 function IntroSlide({ project, accent, fg }: { project: ContentProject; accent: string; fg: string }) {
   const ff = "'Red Hat Display', sans-serif";
   const fm = "'Red Hat Text', sans-serif";
+  const heroImage = project.screens?.[0];
 
-  return (
+  const textCol = (
     <div style={{
-      width: "100%", height: "100%",
-      padding: "64px 100px",
       display: "flex",
       flexDirection: "column",
       justifyContent: "center",
+      flex: heroImage ? "0 0 52%" : "1",
+      paddingRight: heroImage ? 48 : 0,
     }}>
       {/* Eyebrow */}
       <p style={{
@@ -344,19 +361,19 @@ function IntroSlide({ project, accent, fg }: { project: ContentProject; accent: 
         textTransform: "uppercase" as const,
         letterSpacing: "0.18em",
         color: accent,
-        marginBottom: 32,
+        marginBottom: 24,
       }}>
         {project.type} · {project.period}
       </p>
 
-      {/* Company name — solid, large, in accent color */}
+      {/* Company name */}
       <h1 style={{
         fontFamily: ff,
-        fontSize: 108,
+        fontSize: heroImage ? 76 : 108,
         fontWeight: 900,
         letterSpacing: "-0.04em",
         lineHeight: 0.9,
-        marginBottom: 20,
+        marginBottom: 18,
         color: accent,
       }}>
         {project.company}
@@ -364,10 +381,10 @@ function IntroSlide({ project, accent, fg }: { project: ContentProject; accent: 
 
       {/* Role */}
       <p style={{
-        fontSize: 30,
+        fontSize: heroImage ? 24 : 30,
         color: fg,
-        opacity: 0.40,
-        marginBottom: project.summary ? 40 : 0,
+        opacity: 0.55,
+        marginBottom: project.summary ? 32 : 0,
         fontWeight: 400,
         fontFamily: ff,
         letterSpacing: "-0.01em",
@@ -375,19 +392,18 @@ function IntroSlide({ project, accent, fg }: { project: ContentProject; accent: 
         {project.role}
       </p>
 
-      {/* Summary — left-border accent, flat white */}
+      {/* Summary */}
       {project.summary && (
         <div style={{
           borderLeft: `3px solid ${accent}`,
-          paddingLeft: 24,
-          maxWidth: 860,
-          marginBottom: 36,
+          paddingLeft: 20,
+          marginBottom: 28,
         }}>
           <p style={{
             fontFamily: fm,
-            fontSize: 20,
+            fontSize: heroImage ? 16 : 20,
             color: fg,
-            opacity: 0.60,
+            opacity: 0.58,
             lineHeight: 1.68,
             fontWeight: 300,
           }}>
@@ -398,16 +414,16 @@ function IntroSlide({ project, accent, fg }: { project: ContentProject; accent: 
 
       {/* Tags */}
       {project.tags && project.tags.length > 0 && (
-        <div style={{ display: "flex", gap: 8, flexWrap: "wrap" as const }}>
+        <div style={{ display: "flex", gap: 7, flexWrap: "wrap" as const }}>
           {project.tags.map((tag) => (
             <span key={tag} style={{
               fontSize: 10,
               fontFamily: "monospace",
               color: fg,
-              opacity: 0.45,
+              opacity: 0.55,
               border: "1px solid rgba(0,0,0,0.12)",
               borderRadius: 3,
-              padding: "5px 12px",
+              padding: "4px 10px",
               letterSpacing: "0.08em",
               textTransform: "uppercase" as const,
               background: "#ffffff",
@@ -415,6 +431,53 @@ function IntroSlide({ project, accent, fg }: { project: ContentProject; accent: 
               {tag}
             </span>
           ))}
+        </div>
+      )}
+    </div>
+  );
+
+  return (
+    <div style={{
+      width: "100%", height: "100%",
+      padding: "56px 80px 56px 100px",
+      display: "flex",
+      flexDirection: "row",
+      alignItems: "center",
+      gap: 0,
+    }}>
+      {textCol}
+
+      {/* Hero image — right column */}
+      {heroImage && (
+        <div style={{
+          flex: "1",
+          height: "100%",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          position: "relative",
+        }}>
+          {/* Subtle accent glow behind image */}
+          <div style={{
+            position: "absolute",
+            inset: "10%",
+            background: `radial-gradient(ellipse at center, ${accent}18 0%, transparent 70%)`,
+            borderRadius: 24,
+            pointerEvents: "none",
+          }} />
+          <img
+            src={`/${heroImage.src}`}
+            alt={heroImage.alt}
+            style={{
+              maxWidth: "100%",
+              maxHeight: "88%",
+              width: "auto",
+              height: "auto",
+              display: "block",
+              position: "relative",
+              filter: "drop-shadow(0 28px 56px rgba(0,0,0,0.14))",
+            }}
+          />
         </div>
       )}
     </div>
@@ -461,7 +524,7 @@ function TeamSlide({ team, index, total, accent, fg }: {
             fontFamily: fm,
             fontSize: 18,
             color: fg,
-            opacity: 0.50,
+            opacity: 0.65,
             lineHeight: 1.65,
             fontWeight: 300,
           }}>
@@ -500,7 +563,7 @@ function TeamSlide({ team, index, total, accent, fg }: {
                 fontFamily: fm,
                 fontSize: 18,
                 color: fg,
-                opacity: bullet.label ? 0.48 : 0.62,
+                opacity: bullet.label ? 0.65 : 0.72,
                 lineHeight: 1.55,
               }}>
                 {bullet.text}
@@ -550,8 +613,7 @@ function TeamStorySlide({ team, accent, fg }: { team: ProjectTeam; accent: strin
           fontFamily: ff,
           fontSize: 13,
           fontWeight: 600,
-          color: fg,
-          opacity: 0.30,
+          color: "#767676",
           letterSpacing: "0.10em",
           textTransform: "uppercase" as const,
           marginBottom: 14,
@@ -587,8 +649,7 @@ function TeamStorySlide({ team, accent, fg }: { team: ProjectTeam; accent: strin
               fontFamily: ff,
               fontSize: 12,
               fontWeight: 600,
-              color: fg,
-              opacity: 0.30,
+              color: "#767676",
               letterSpacing: "0.1em",
               textTransform: "uppercase" as const,
               marginBottom: 10,
@@ -689,21 +750,42 @@ function SectionSlide({ section, index, total, accent, fg }: {
 
   return (
     <div style={{ width: "100%", height: "100%", padding: "64px 100px", display: "flex", flexDirection: "column", justifyContent: "center" }}>
-      <Label text={`${String(index + 1).padStart(2, "0")} / ${String(total).padStart(2, "0")}`} accent={accent} />
-      <h2 style={{
-        fontFamily: ff,
-        fontSize: 64,
-        fontWeight: 800,
-        letterSpacing: "-0.025em",
-        lineHeight: 1.08,
-        marginBottom: 32,
-        maxWidth: 1100,
+      {/* Accent label — index */}
+      <p style={{
+        fontSize: 11,
+        fontFamily: "monospace",
+        textTransform: "uppercase" as const,
+        letterSpacing: "0.18em",
         color: accent,
+        marginBottom: 12,
+      }}>
+        {String(index + 1).padStart(2, "0")} / {String(total).padStart(2, "0")}
+      </p>
+
+      {/* Section title — gray uppercase hint style */}
+      <p style={{
+        fontFamily: ff,
+        fontSize: 13,
+        color: "#767676",
+        letterSpacing: "0.08em",
+        textTransform: "uppercase" as const,
+        marginBottom: 48,
       }}>
         {section.title}
-      </h2>
-      <div style={{ borderLeft: `3px solid ${accent}`, paddingLeft: 28, maxWidth: 940 }}>
-        <p style={{ fontFamily: fm, fontSize: 24, color: fg, opacity: 0.58, lineHeight: 1.68 }}>
+      </p>
+
+      {/* Body text with left accent border */}
+      <div style={{ borderLeft: `4px solid ${accent}`, paddingLeft: 36, maxWidth: 1060 }}>
+        <div style={{ width: 32, height: 2, background: accent, borderRadius: 1, marginBottom: 28 }} />
+        <p style={{
+          fontFamily: fm,
+          fontSize: 28,
+          color: fg,
+          opacity: 0.78,
+          lineHeight: 1.75,
+          fontWeight: 300,
+          letterSpacing: "-0.01em",
+        }}>
           {section.text}
         </p>
       </div>
@@ -748,8 +830,7 @@ function ImpactSlide({ project, metrics, accent, fg }: {
             <p style={{
               fontFamily: fm,
               fontSize: 13,
-              color: fg,
-              opacity: 0.40,
+              color: "#767676",
               letterSpacing: "0.06em",
               textTransform: "uppercase" as const,
               lineHeight: 1.45,
@@ -784,7 +865,7 @@ function KpiSlide({ project, kpiCards, accent, fg }: {
             paddingTop: 8,
             paddingBottom: 8,
           }}>
-            <p style={{ fontFamily: fm, fontSize: 11, textTransform: "uppercase" as const, letterSpacing: "0.12em", color: fg, opacity: 0.35, marginBottom: 14 }}>
+            <p style={{ fontFamily: fm, fontSize: 12, textTransform: "uppercase" as const, letterSpacing: "0.12em", color: "#767676", marginBottom: 14 }}>
               {card.label}
             </p>
             <p style={{ fontFamily: ff, fontSize: 52, fontWeight: 900, letterSpacing: "-0.025em", lineHeight: 1, marginBottom: 12, color: accent }}>
@@ -805,26 +886,66 @@ function KpiSlide({ project, kpiCards, accent, fg }: {
 function LogosSlide({ project, logos, accent, fg: _fg }: {
   project: ContentProject; logos: string[]; accent: string; fg: string;
 }) {
+  // logos can be bare filenames (old) or relative paths like "logos-fanfest/psg.jpeg"
+  const cols = logos.length <= 9 ? 3 : logos.length <= 12 ? 4 : 6;
+
   return (
-    <div style={{ width: "100%", height: "100%", padding: "64px 100px", display: "flex", flexDirection: "column" }}>
-      <Label text={`${project.company} · Clients & Partners`} accent={accent} />
-      <div style={{ flex: 1, display: "flex", flexWrap: "wrap" as const, gap: 12, alignContent: "center" }}>
-        {logos.map((logo, i) => (
+    <div style={{
+      width: "100%", height: "100%",
+      padding: "44px 100px 52px",
+      display: "flex",
+      flexDirection: "column",
+    }}>
+      {/* Header */}
+      <div style={{ marginBottom: 24 }}>
+        <Label text={`${project.company} · Clients & Partners`} accent={accent} />
+        <p style={{
+          fontFamily: "monospace",
+          fontSize: 12,
+          color: "rgba(0,0,0,0.32)",
+          letterSpacing: "0.06em",
+          marginTop: 6,
+        }}>
+          {logos.length} brands · football, basketball, music & entertainment
+        </p>
+      </div>
+
+      {/* Logo grid — fixed-size circles filling the slide */}
+      <div style={{
+        flex: 1,
+        display: "flex",
+        flexWrap: "wrap" as const,
+        alignContent: "center",
+        justifyContent: "center",
+        gap: 24,
+      }}>
+        {logos.map((logo, i) => {
+          const src = logo.includes("/")
+            ? `/images/cases/${logo}`
+            : `/images/cases/fanfest-logos/${logo}`;
+          const name = logo.split("/").pop()!.replace(/\.(png|jpe?g)$/i, "").replace(/-/g, " ");
+          return (
           <div key={i} style={{
-            width: 120, height: 68,
-            display: "flex", alignItems: "center", justifyContent: "center",
-            background: "#f8f8f9",
-            border: "1px solid rgba(0,0,0,0.08)",
-            borderRadius: 8,
-            padding: 14,
+            width: 220,
+            height: 220,
+            borderRadius: "50%",
+            overflow: "hidden",
+            flexShrink: 0,
+            boxShadow: "0 6px 24px rgba(0,0,0,0.13)",
           }}>
             <img
-              src={`/images/cases/fanfest-logos/${logo}`}
-              alt={logo.replace(".png", "").replace(/-/g, " ")}
-              style={{ width: "100%", height: "100%", objectFit: "contain", filter: "grayscale(100%) brightness(0.35)", opacity: 0.65 }}
+              src={src}
+              alt={name}
+              style={{
+                width: "100%",
+                height: "100%",
+                objectFit: "cover",
+                display: "block",
+              }}
             />
           </div>
-        ))}
+          );
+        })}
       </div>
     </div>
   );
@@ -835,21 +956,54 @@ function LogosSlide({ project, logos, accent, fg: _fg }: {
 function ScreensSlide({ project, screens, accent, fg: _fg }: {
   project: ContentProject; screens: ProjectScreen[]; accent: string; fg: string;
 }) {
+  const layout  = SCREEN_LAYOUTS[project.slug];
+  const source  = layout?.skipHero ? screens.slice(1) : screens;
+  const visible = source.slice(0, 3);
+  const count   = visible.length;
+  const flexMap = layout?.flex ?? [];
+
   return (
-    <div style={{ width: "100%", height: "100%", padding: "64px 100px", display: "flex", flexDirection: "column" }}>
+    <div style={{ width: "100%", height: "100%", padding: "36px 72px 44px", display: "flex", flexDirection: "column" }}>
       <Label text={`${project.company} · Screens`} accent={accent} />
-      <div style={{ flex: 1, display: "flex", gap: 16, overflow: "hidden" }}>
-        {screens.slice(0, 3).map((screen, i) => (
-          <div key={i} style={{
-            flex: 1,
-            borderRadius: 10,
-            overflow: "hidden",
-            border: "1px solid rgba(0,0,0,0.10)",
-            boxShadow: "0 4px 20px rgba(0,0,0,0.08)",
-          }}>
-            <img src={`/${screen.src}`} alt={screen.alt} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
-          </div>
-        ))}
+
+      <div style={{
+        flex: 1,
+        minHeight: 0,
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        gap: 20,
+      }}>
+        {visible.map((screen, i) => {
+          const flexVal = flexMap[i] ?? 1;
+          return (
+            <div
+              key={i}
+              style={{
+                flex: `${flexVal} ${flexVal} 0`,
+                minWidth: 0,
+                minHeight: 0,
+                height: "100%",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <img
+                src={`/${screen.src}`}
+                alt={screen.alt}
+                style={{
+                  maxWidth: "100%",
+                  maxHeight: "100%",
+                  width: "auto",
+                  height: "auto",
+                  display: "block",
+                  filter: "drop-shadow(0 20px 48px rgba(0,0,0,0.14))",
+                }}
+              />
+            </div>
+          );
+        })}
       </div>
     </div>
   );
@@ -884,9 +1038,8 @@ function StorySlide({ label, hint, text, accent, fg }: {
       {/* Hint */}
       <p style={{
         fontFamily: ff,
-        fontSize: 12,
-        color: fg,
-        opacity: 0.20,
+        fontSize: 13,
+        color: "#767676",
         letterSpacing: "0.08em",
         textTransform: "uppercase" as const,
         marginBottom: 48,

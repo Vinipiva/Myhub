@@ -72,6 +72,7 @@ export function getContentProjects(): ContentProject[] {
       const fm = parseFrontmatter<ContentProjectFrontmatter>(raw);
       return { slug, ...fm } as ContentProject;
     })
+    .filter((p) => !p.hidden)
     .sort((a, b) => (a.order ?? 99) - (b.order ?? 99));
 }
 

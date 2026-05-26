@@ -24,13 +24,13 @@ export default function Hero({ name, role, summary }: Props) {
       {/* fade bottom */}
       <div className="absolute bottom-0 left-0 right-0 h-48 bg-gradient-to-t from-[#f8f8f8] via-[#f8f8f8]/60 to-transparent z-20 pointer-events-none" />
       <section className="absolute inset-0 flex flex-col justify-center text-left px-4 z-20 mx-auto max-w-6xl sm:px-6 md:px-12">
-        <h1 className="font-bold text-4xl sm:text-5xl md:text-7xl leading-tight tracking-tight bg-clip-text text-transparent bg-gradient-to-t from-[hsla(0,0%,0%,80%)] to-[hsla(0,0%,50%,85%)]">
+        <h1 className="font-bold text-4xl sm:text-5xl md:text-7xl leading-tight tracking-tight bg-clip-text text-transparent bg-gradient-to-t from-[hsla(0,0%,0%,95%)] to-[hsla(0,0%,25%,90%)]">
           {name}
         </h1>
-        <h2 className="font-medium text-xl sm:text-2xl md:text-4xl bg-clip-text text-transparent bg-gradient-to-t from-[hsla(0,0%,10%,70%)] to-[hsla(0,0%,50%,90%)]">
+        <p className="font-medium text-xl sm:text-2xl md:text-4xl text-gray-700">
           {role}
-        </h2>
-        <p className="mt-4 max-w-full md:max-w-2xl text-base sm:text-lg md:text-2xl text-gray-500">
+        </p>
+        <p className="mt-4 max-w-full md:max-w-2xl text-base sm:text-lg md:text-2xl text-gray-600">
           {summary}
         </p>
         <a

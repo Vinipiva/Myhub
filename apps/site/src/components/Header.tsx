@@ -72,7 +72,9 @@ const Header: React.FC = () => {
           {/* Mobile Nav Toggle */}
           <button
             className="sm:hidden flex items-center px-2 py-1"
-            aria-label="Open menu"
+            aria-label={menuOpen ? "Close menu" : "Open menu"}
+            aria-expanded={menuOpen}
+            aria-controls="mobile-menu"
             onClick={() => setMenuOpen(!menuOpen)}
           >
             <svg width="28" height="28" fill="none" stroke="currentColor" strokeWidth="2">
@@ -83,7 +85,7 @@ const Header: React.FC = () => {
 
         {/* Mobile Menu */}
         {menuOpen && (
-          <div className="sm:hidden absolute top-16 left-0 w-full bg-white shadow-md z-50">
+          <div id="mobile-menu" className="sm:hidden absolute top-16 left-0 w-full bg-white shadow-md z-50">
             <ul className="flex flex-col py-2">
               {navLinks.map(({ href, label }) => (
                 <li key={href}>

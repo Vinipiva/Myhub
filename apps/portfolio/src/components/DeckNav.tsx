@@ -29,6 +29,7 @@ const mono = "monospace";
 export default function DeckNav({ section, caseSlug, cases }: Props) {
   const [casesOpen, setCasesOpen] = useState(false);
   const [hovered, setHovered] = useState<string | null>(null);
+  const [isLight, setIsLight] = useState(false);
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
@@ -38,7 +39,24 @@ export default function DeckNav({ section, caseSlug, cases }: Props) {
     return () => window.removeEventListener("keydown", onKey);
   }, []);
 
+  // Init sky theme from localStorage
+  useEffect(() => {
+    const light = localStorage.getItem("sky-theme") === "light";
+    setIsLight(light);
+    document.documentElement.classList.toggle("sky--light", light);
+    document.querySelector(".cover")?.classList.toggle("sky--light", light);
+  }, []);
+
+  const handleSkyToggle = () => {
+    const next = !isLight;
+    setIsLight(next);
+    document.documentElement.classList.toggle("sky--light", next);
+    document.querySelector(".cover")?.classList.toggle("sky--light", next);
+    localStorage.setItem("sky-theme", next ? "light" : "dark");
+  };
+
   const isActive = (id: string) => section === id;
+  const dark = true; // always dark-glass nav for consistency across all pages
 
   return (
     <nav
@@ -51,8 +69,10 @@ export default function DeckNav({ section, caseSlug, cases }: Props) {
         alignItems: "center",
         justifyContent: "space-between",
         padding: "0 64px",
-        background: "#ffffff",
-        borderBottom: "1px solid rgba(0,0,0,0.08)",
+        background: dark ? "rgba(4, 3, 18, 0.42)" : "#ffffff",
+        backdropFilter: dark ? "blur(20px) saturate(120%)" : "none",
+        WebkitBackdropFilter: dark ? "blur(20px) saturate(120%)" : "none",
+        borderBottom: dark ? "1px solid rgba(255,255,255,0.07)" : "1px solid rgba(0,0,0,0.08)",
         boxSizing: "border-box",
         fontFamily: fm,
         overflow: "visible",
@@ -90,9 +110,9 @@ export default function DeckNav({ section, caseSlug, cases }: Props) {
         }}>
           VP
         </span>
-        <span style={{ width: 1, height: 14, background: "rgba(0,0,0,0.1)", display: "block" }} />
+        <span style={{ width: 1, height: 14, background: dark ? "rgba(255,255,255,0.15)" : "rgba(0,0,0,0.10)", display: "block" }} />
         <span style={{
-          color: "#374151",
+          color: dark ? "rgba(255,255,255,0.82)" : "#374151",
           fontSize: 13,
           fontFamily: fm,
           letterSpacing: "0.01em",
@@ -119,7 +139,9 @@ export default function DeckNav({ section, caseSlug, cases }: Props) {
                   href={item.href}
                   style={{
                     position: "relative",
-                    color: active ? "#111827" : hov ? "#374151" : "#6B7280",
+                    color: dark
+                      ? (active ? "#ffffff" : hov ? "rgba(255,255,255,0.85)" : "rgba(255,255,255,0.52)")
+                      : (active ? "#111827" : hov ? "#374151" : "#6B7280"),
                     fontFamily: mono,
                     fontSize: 11,
                     letterSpacing: "0.12em",
@@ -130,7 +152,7 @@ export default function DeckNav({ section, caseSlug, cases }: Props) {
                     display: "flex",
                     alignItems: "center",
                     gap: 5,
-                    background: active ? "rgba(0,0,0,0.05)" : "transparent",
+                    background: active ? (dark ? "rgba(255,255,255,0.08)" : "rgba(0,0,0,0.05)") : "transparent",
                     transition: "color 0.15s, background 0.15s",
                     fontWeight: active ? 600 : 400,
                   }}
@@ -207,7 +229,9 @@ export default function DeckNav({ section, caseSlug, cases }: Props) {
               onMouseLeave={() => setHovered(null)}
               style={{
                 position: "relative",
-                color: active ? "#111827" : hov ? "#374151" : "#6B7280",
+                color: dark
+                  ? (active ? "#ffffff" : hov ? "rgba(255,255,255,0.85)" : "rgba(255,255,255,0.52)")
+                  : (active ? "#111827" : hov ? "#374151" : "#6B7280"),
                 fontFamily: mono,
                 fontSize: 11,
                 letterSpacing: "0.12em",
@@ -215,7 +239,7 @@ export default function DeckNav({ section, caseSlug, cases }: Props) {
                 textDecoration: "none",
                 padding: "6px 14px",
                 borderRadius: 6,
-                background: active ? "rgba(0,0,0,0.05)" : "transparent",
+                background: active ? (dark ? "rgba(255,255,255,0.08)" : "rgba(0,0,0,0.05)") : "transparent",
                 transition: "color 0.15s, background 0.15s",
                 fontWeight: active ? 600 : 400,
               }}
@@ -235,9 +259,30 @@ export default function DeckNav({ section, caseSlug, cases }: Props) {
       </div>
 
       {/* Right: slide counter placeholder keeps layout balanced */}
-      <span style={{ color: "rgba(0,0,0,0.18)", fontFamily: mono, fontSize: 10, letterSpacing: "0.08em", flexShrink: 0 }}>
-        viniciuspiva.com
-      </span>
+      <div style={{ display: "flex", alignItems: "center", gap: 10, flexShrink: 0 }}>
+        <button
+          onClick={handleSkyToggle}
+          title={isLight ? "Switch to night" : "Switch to day"}
+          style={{
+            width: 28, height: 28,
+            borderRadius: 6,
+            background: dark ? "rgba(255,255,255,0.08)" : "rgba(0,0,0,0.06)",
+            border: `1px solid ${dark ? "rgba(255,255,255,0.12)" : "rgba(0,0,0,0.10)"}`,
+            color: dark ? "rgba(255,255,255,0.55)" : "rgba(0,0,0,0.40)",
+            fontSize: 13,
+            cursor: "pointer",
+            display: "inline-flex",
+            alignItems: "center",
+            justifyContent: "center",
+            transition: "opacity 0.15s",
+          }}
+        >
+          {isLight ? "☽" : "☀"}
+        </button>
+        <span style={{ color: dark ? "rgba(255,255,255,0.22)" : "rgba(0,0,0,0.18)", fontFamily: mono, fontSize: 10, letterSpacing: "0.08em" }}>
+          viniciuspiva.com
+        </span>
+      </div>
     </nav>
   );
 }

@@ -9,9 +9,14 @@ const BRAND_GRAD = "linear-gradient(90deg, #7c3aed, #ec4899, #f59e0b)";
 
 /** Solid accent per project — no glass, no translucency */
 const CARD_ACCENTS: Record<string, { accent: string; image: string }> = {
-  "realtor-com": { accent: "#DC2626", image: "/images/cases/rdc.png" },
-  "avail-co":    { accent: "#2563EB", image: "/images/cases/avail-screens.png" },
-  "fanfest-io":  { accent: "#7C3AED", image: "/images/cases/fanfest-a.png" },
+  "okamed":               { accent: "#1D4ED8", image: "/images/cases/argos-ilustration.png" },
+  "pepsico":              { accent: "#004B93", image: "" },
+  "realtor-com":          { accent: "#DC2626", image: "/images/cases/realtor-illustration.png" },
+  "realtor-rentals":      { accent: "#DC2626", image: "/images/cases/realtor-illustration.png" },
+  "realtor-online-store": { accent: "#DC2626", image: "/images/cases/RealtorPro-online-store.png" },
+  "realtor-upnest":       { accent: "#DC2626", image: "/images/cases/upnest.png" },
+  "avail-co":             { accent: "#2563EB", image: "/images/cases/avail.png" },
+  "fanfest-io":           { accent: "#7C3AED", image: "/images/cases/fanfest-a.png" },
 };
 const DEFAULT_CARD = { accent: "#7C3AED", image: "" };
 
@@ -30,7 +35,7 @@ export default function CaseNavigator({ projects }: Props) {
       width: "100%",
       height: "100%",
       position: "absolute",
-      top: 56,
+      top: 0,
       left: 0,
       right: 0,
       bottom: 0,
@@ -39,7 +44,7 @@ export default function CaseNavigator({ projects }: Props) {
       flexDirection: "column",
       fontFamily: fm,
       boxSizing: "border-box",
-      background: "#ffffff",
+      background: "transparent",
       overflow: "hidden",
     }}>
       {/* Header */}
@@ -123,22 +128,29 @@ export default function CaseNavigator({ projects }: Props) {
               {/* Image */}
               {image && (
                 <div style={{
-                  height: 200,
-                  overflow: "hidden",
+                  height: 220,
                   position: "relative",
-                  background: "#f3f4f6",
+                  background: "#ffffff",
                   flexShrink: 0,
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  padding: "12px 16px",
                 }}>
                   <img
                     src={image}
                     alt={project.company}
                     style={{
-                      width: "100%",
-                      height: "100%",
-                      objectFit: "cover",
-                      objectPosition: "top center",
-                      transition: "transform 0.4s ease",
-                      transform: isHov ? "scale(1.05)" : "scale(1)",
+                      maxWidth: "100%",
+                      maxHeight: "100%",
+                      width: "auto",
+                      height: "auto",
+                      display: "block",
+                      transition: "transform 0.4s ease, filter 0.4s ease",
+                      transform: isHov ? "translateY(-5px) scale(1.02)" : "none",
+                      filter: isHov
+                        ? "drop-shadow(0 14px 28px rgba(0,0,0,0.13))"
+                        : "drop-shadow(0 4px 12px rgba(0,0,0,0.07))",
                     }}
                   />
 

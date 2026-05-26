@@ -1,62 +1,36 @@
 ---
-company: Realtor.com
-role: Senior product designer
-period: "2023–2025"
-type: Full-time contractor
-summary: Played a pivotal role in shaping the user experience across the entire real estate journey, working across multiple teams to address the needs of buyers, renters, real estate agents, and coordinators.
-order: 2
+company: "Realtor.com — Rentals"
+role: Senior Product Designer
+period: "Oct 2023 – Oct 2024"
+type: Remote contractor
+summary: "Led UX design for the Rentals experience on one of the largest real estate platforms in the US — 190M+ monthly users. Shipped rental search improvements, contributed to the Harmony design system implementation for realtor.com/rentals, and co-built an AI-powered conversational search MVP."
+order: 1
 metrics:
-  - value: "190M"
+  - value: "190M+"
     label: Monthly users
-    color: "from-red-400 to-red-500"
   - value: "+12.5%"
     label: Unique lead submissions
-  - value: "-80%"
-    label: Mobile drop-off
-  - value: "~40–60%"
-    label: Faster task completion
-teams:
-  - name: Rentals Team
-    description: Improved the experience for users searching for apartments and houses for rent
-    problem: "Rental lead submissions were flat despite high traffic. The search experience had friction — filters were incomplete and the path from search to lead was unclear for renters."
-    approach: "Redesigned search and filters end-to-end. Contributed to an AI-powered conversational search MVP alongside engineering."
-    outcome: "+12.5% unique lead submissions. 7% more qualified leads from improved search and filters. Shipped AI-powered conversational search MVP."
-    bullets:
-      - label: Streamlined rental search
-        text: "Achieved 12.5% uplift in unique lead submissions."
-      - label: "Enhanced search & filters"
-        text: "Boosted engagement, driving 7% more qualified leads."
-      - label: null
-        text: "Built AI-powered search MVP with conversational UI."
-  - name: Online Store Team
-    description: Led foundational research to empower real estate agents with tools for purchasing leads and generating listings effectively.
-    problem: "Mobile drop-off in the Online Store had reached ~90%, stalling the product as a business asset. Agents couldn't effectively buy leads or generate listings — adoption was critically low."
-    approach: "Conducted heuristic analysis and user interviews to diagnose root causes. Led redesign from research findings through final delivery."
-    outcome: "Mobile drop-off cut from ~90% to under ~10%. Turned a stalled product into a viable business asset."
-    bullets:
-      - label: Heuristic analysis and user interviews
-        text: "Diagnosed usability challenges and adoption issues within the Online Store for agents."
-      - label: Reduced mobile drop-off
-        text: "From ~90% to under ~10%, turning a stalled product into a business asset."
-  - name: UpNest Team
-    description: Conducted a CRM dashboard redesign to help real estate agents manage their leads and workflows.
-    problem: "The UpNest CRM had structural and hierarchy issues that slowed agents' daily workflows across the funnel. Lead segmentation was unclear and contextual actions were buried."
-    approach: "Redesigned structure, hierarchy, and interaction logic across platforms. Focused on contextual actions and improved lead segmentation."
-    outcome: "Agents completing tasks ~40–60% faster across the funnel."
-    bullets:
-      - label: Redesigned
-        text: "Structure, hierarchy, and usability across platforms — improving daily workflows for thousands of real estate agents."
-      - label: Workflow optimization
-        text: "Enabling agents to complete tasks ~40–60% faster."
+  - value: "+7%"
+    label: Qualified leads
+sections:
+  - title: "From Avail to Realtor"
+    text: "After two years shaping Avail.co — a landlord property management platform later acquired by Move Corporation, Realtor.com's parent company — I joined Realtor.com directly to lead design on the Rentals experience. That background in rental product gave me context few designers brought to this team."
+  - title: "Search, Filters & Harmony"
+    text: "Redesigned the rental search and filtering experience end-to-end, improving lead quality and submission rates. Contributed to the rollout of Harmony — Realtor.com's design system (formerly Haven) — on the Rentals product. The work involved cataloging cross-platform divergences across web, iOS, and Android, consolidating one-off patterns into single instances with variants, and assembling standardized components back into the product's master files. A platform-wide overhaul that shaped much of what's visible at realtor.com/rentals today."
+  - title: "AI Conversational Search"
+    text: "Co-built an AI-powered conversational search MVP with engineering — designed around relevance and user intent, focusing on how users actually describe what they're looking for in a rental home."
+screens:
+  - src: "images/cases/realtor-illustration.png"
+    alt: "Realtor.com Rentals — search & listing experience"
+  - src: "images/cases/realtor-rentals.png"
+    alt: "Realtor.com Rentals — product screens"
+  - src: "images/cases/rdc.png"
+    alt: "Realtor.com Rentals — browse"
 tags:
   - proptech
   - consumer
   - ai
-  - growth
-  - research
-  - crm
+  - design-system
 ---
 
-Improved the rental search experience, achieving 12.5% uplift in unique lead submissions and 7% more qualified leads through enhanced search and filters. Built an AI-powered search MVP with conversational UI.
-
-Led foundational research for the Online Store — heuristic analysis and user interviews diagnosed adoption issues, reducing mobile drop-off from ~90% to under ~10%. Redesigned the UpNest CRM dashboard, enabling agents to complete tasks 40–60% faster.
+Led UX design for the Rentals experience at Realtor.com — 190M+ monthly users. Achieved +12.5% in unique lead submissions and +7% in qualified leads through end-to-end redesign of search and filtering. Contributed to the rollout of Harmony (Realtor.com's design system) on the Rentals product — cataloging cross-platform divergences, consolidating one-off components into standardized variants, and bridging design and development in a holistic handoff cycle. Co-built an AI-powered conversational search MVP with engineering.

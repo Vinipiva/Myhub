@@ -1,7 +1,7 @@
 ---
 company: Avail.co
 role: Lead Product Designer
-period: "Mar 2021 – Apr 2023"
+period: "Mar 2021 – Mar 2023"
 location: "Chicago, IL"
 type: Remote contractor
 summary: As Lead Designer for the Marketing Squad, owned all customer-facing marketing and conversion pages, researching and crafting user journeys and interfaces.

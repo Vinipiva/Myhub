@@ -20,25 +20,18 @@ sections:
   - title: "AI & Engagement"
     text: "Led design for gamification, AI personalization, loyalty systems, and real-time fan experiences. Helped validate product-market fit and drove up to 30% paid conversion in early pilots."
 logos:
-  - 49ers.png
-  - aston-villa.png
-  - belgian-national.png
-  - chelsea.png
-  - crystal-palace.png
-  - french-national.png
-  - liverpool.png
-  - lyonnais.png
-  - mancity.png
-  - nba-top-shot.png
-  - nfl.png
-  - paris-basketball.png
-  - premier-league.png
-  - psg.png
-  - rolling-stones.png
-  - sky-sports.png
-  - socios.png
-  - spanish-national.png
+  - logos-fanfest/psg.jpeg
+  - logos-fanfest/mancity.jpeg
+  - logos-fanfest/premier-league.jpg
+  - logos-fanfest/skysports.jpeg
+  - logos-fanfest/nba.jpeg
+  - logos-fanfest/socios.jpeg
+  - logos-fanfest/acmilan.jpeg
+  - logos-fanfest/og.jpeg
+  - logos-fanfest/comcast.jpeg
 screens:
+  - src: images/cases/fanfest-site-desktop.png
+    alt: FanFest — website desktop
   - src: images/cases/fanfest-a.png
     alt: FanFest App Screen A
   - src: images/cases/fanfest-b.png

@@ -69,6 +69,7 @@ export interface ContentProjectFrontmatter {
   type?: string;
   summary?: string;
   order?: number;
+  hidden?: boolean;
   metrics?: ProjectMetric[];
   tags?: string[];
   // Realtor / PepsiCo
